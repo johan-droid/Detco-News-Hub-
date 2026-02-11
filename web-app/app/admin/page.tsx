@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
-import { Lock, LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X } from "lucide-react";
+import { Lock, LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X, Upload } from "lucide-react";
 import BackButton from "@/components/BackButton";
 
 type Post = {
@@ -26,17 +25,12 @@ const INITIAL_FORM_STATE = Object.freeze({
     author: "" as string,
 });
 
-declare global {
-    interface Window {
-        cloudinary: any;
-    }
-}
-
 export default function AdminDashboard() {
     const [session, setSession] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState<Post[]>([]);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
@@ -76,21 +70,50 @@ export default function AdminDashboard() {
         router.refresh();
     }, [router]);
 
-    const openWidget = useCallback(() => {
-        if (window.cloudinary) {
-            window.cloudinary.createUploadWidget(
-                {
-                    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-                    uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
-                    sources: ["local", "url"],
-                    multiple: false,
-                },
-                (error: any, result: any) => {
-                    if (!error && result && result.event === "success") {
-                        setFormData(prev => ({ ...prev, image: result.info.secure_url }));
-                    }
-                }
-            ).open();
+    const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image size must be less than 5MB');
+            return;
+        }
+
+        setUploading(true);
+        try {
+            // Create unique filename
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // Upload to Supabase Storage
+            const { data, error } = await supabase.storage
+                .from('news-images')
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
+            if (error) throw error;
+
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('news-images')
+                .getPublicUrl(filePath);
+
+            setFormData(prev => ({ ...prev, image: publicUrl }));
+        } catch (error: any) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image: ' + error.message);
+        } finally {
+            setUploading(false);
         }
     }, []);
 
@@ -171,11 +194,11 @@ export default function AdminDashboard() {
     if (!session) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-ink p-4">
-                <div className="w-full max-w-md bg-card border border-gold/30 p-8 shadow-2xl">
+                <div className="w-full max-w-md bg-card border border-gold/30 p-6 sm:p-8 shadow-2xl">
                     <div className="flex justify-center mb-6 text-gold">
                         <Lock size={48} />
                     </div>
-                    <h2 className="text-center font-display font-bold text-2xl text-white mb-8 tracking-wide">RESTRICTED ACCESS</h2>
+                    <h2 className="text-center font-display font-bold text-xl sm:text-2xl text-white mb-8 tracking-wide">RESTRICTED ACCESS</h2>
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
                             <label className="block font-mono text-xs text-gold uppercase tracking-widest mb-2">Security Key</label>
@@ -183,14 +206,14 @@ export default function AdminDashboard() {
                                 type="password"
                                 value={loginSecret}
                                 onChange={(e) => setLoginSecret(e.target.value)}
-                                className="w-full bg-black/30 border border-white/10 text-white p-3 focus:border-gold outline-none transition-colors font-mono"
+                                className="w-full bg-black/30 border border-white/10 text-white p-3 focus:border-gold outline-none transition-colors font-mono text-sm"
                                 placeholder="Enter Access Key"
                             />
                         </div>
                         {loginError && <p className="text-red text-xs font-mono">{loginError}</p>}
                         <button
                             type="submit"
-                            className="w-full bg-gold text-ink font-mono font-bold py-3 uppercase tracking-widest hover:bg-gold-light transition-colors"
+                            className="w-full bg-gold text-ink font-mono font-bold py-3 sm:py-4 uppercase tracking-widest hover:bg-gold-light transition-colors text-sm"
                         >
                             Authenticate
                         </button>
@@ -201,14 +224,13 @@ export default function AdminDashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-ink text-white p-6 md:p-12 font-body">
-            <BackButton className="mb-6" text="Back to Site" />
-            <Script src="https://upload-widget.cloudinary.com/global/all.js" strategy="lazyOnload" />
+        <div className="min-h-screen bg-ink text-white p-4 sm:p-6 md:p-12 font-body">
+            <BackButton className="mb-4 sm:mb-6" text="Back to Site" />
 
             <div className="max-w-5xl mx-auto">
-                <header className="flex justify-between items-center border-b border-white/10 pb-6 mb-12">
-                    <h1 className="font-display font-bold text-3xl">DetCo News Console</h1>
-                    <div className="flex items-center gap-4">
+                <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/10 pb-4 sm:pb-6 mb-8 sm:mb-12 gap-4">
+                    <h1 className="font-display font-bold text-2xl sm:text-3xl">DetCo News Console</h1>
+                    <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                         <button
                             onClick={() => router.push("/")}
                             className="text-gold hover:text-white font-mono text-xs uppercase tracking-widest transition-colors"
@@ -217,7 +239,7 @@ export default function AdminDashboard() {
                         </button>
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-2 bg-red/10 text-red border border-red/20 px-4 py-2 font-mono text-xs uppercase tracking-widest hover:bg-red hover:text-white transition-colors"
+                            className="flex items-center gap-2 bg-red/10 text-red border border-red/20 px-3 sm:px-4 py-2 sm:py-2.5 font-mono text-xs uppercase tracking-widest hover:bg-red hover:text-white transition-colors min-h-[44px]"
                         >
                             <LogOut size={14} /> Logout
                         </button>
@@ -225,21 +247,21 @@ export default function AdminDashboard() {
                 </header>
 
                 {/* EDITOR */}
-                <div className="bg-card border border-white/10 p-8 mb-16 relative">
+                <div className="bg-card border border-white/10 p-4 sm:p-6 md:p-8 mb-12 sm:mb-16 relative">
                     <div className="absolute top-0 left-0 w-1 h-full bg-gold" />
                     <h3 className="font-mono text-gold text-sm uppercase tracking-widest mb-6 border-b border-white/5 pb-2">
                         {editingId ? "Edit Case File" : "New Case File"}
                     </h3>
 
                     <form onSubmit={handleSave} className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label className="block font-mono text-xs text-muted uppercase mb-2">Headline</label>
                                 <input
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none"
+                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none text-sm sm:text-base min-h-[44px]"
                                     placeholder="e.g. Black Organization Sighting..."
                                 />
                             </div>
@@ -248,7 +270,7 @@ export default function AdminDashboard() {
                                 <select
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value as typeof INITIAL_FORM_STATE.category })}
-                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none appearance-none"
+                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none appearance-none text-sm sm:text-base min-h-[44px]"
                                 >
                                     <option value="BREAKING">BREAKING</option>
                                     <option value="MANGA">MANGA</option>
@@ -259,28 +281,41 @@ export default function AdminDashboard() {
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label className="block font-mono text-xs text-muted uppercase mb-2">Editor Name</label>
                                 <input
                                     type="text"
                                     value={formData.author}
                                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none"
+                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none text-sm sm:text-base min-h-[44px]"
                                     placeholder="e.g. Conan Edogawa"
                                 />
                             </div>
                             <div>
                                 <label className="block font-mono text-xs text-muted uppercase mb-2">Evidence (Image)</label>
-                                <button
-                                    type="button"
-                                    onClick={openWidget}
-                                    className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-3 w-full justify-center font-mono text-xs uppercase hover:bg-accent hover:text-white transition-colors"
-                                >
-                                    <ImageIcon size={16} /> Upload Evidence
-                                </button>
+                                <label className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-3 w-full justify-center font-mono text-xs uppercase hover:bg-accent hover:text-white transition-colors cursor-pointer min-h-[44px]">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        className="hidden"
+                                        disabled={uploading}
+                                    />
+                                    {uploading ? (
+                                        <>
+                                            <Upload size={16} className="animate-pulse" /> Uploading...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <ImageIcon size={16} /> Upload Evidence
+                                        </>
+                                    )}
+                                </label>
                                 {formData.image && (
-                                    <div className="mt-2 text-xs text-gold truncate">{formData.image}</div>
+                                    <div className="mt-2 text-xs text-gold truncate" title={formData.image}>
+                                        ✓ Image uploaded
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -291,15 +326,15 @@ export default function AdminDashboard() {
                                 rows={6}
                                 value={formData.content}
                                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none resize-none"
+                                className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none resize-none text-sm sm:text-base"
                                 placeholder="Full report content..."
                             />
                         </div>
 
-                        <div className="flex gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                             <button
                                 type="submit"
-                                className="bg-gold text-ink font-mono font-bold py-3 px-8 uppercase tracking-widest hover:bg-gold-light transition-colors flex items-center gap-2"
+                                className="bg-gold text-ink font-mono font-bold py-3 px-6 sm:px-8 uppercase tracking-widest hover:bg-gold-light transition-colors flex items-center justify-center gap-2 min-h-[44px] text-sm"
                             >
                                 <Save size={16} /> {editingId ? "Update Report" : "Publish Report"}
                             </button>
@@ -307,7 +342,7 @@ export default function AdminDashboard() {
                                 <button
                                     type="button"
                                     onClick={resetForm}
-                                    className="bg-white/5 text-muted hover:text-white font-mono font-bold py-3 px-6 uppercase tracking-widest transition-colors flex items-center gap-2"
+                                    className="bg-white/5 text-muted hover:text-white font-mono font-bold py-3 px-6 uppercase tracking-widest transition-colors flex items-center justify-center gap-2 min-h-[44px] text-sm"
                                 >
                                     <X size={16} /> Cancel
                                 </button>
@@ -318,33 +353,33 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* LIST */}
-                <h3 className="font-mono text-gold text-sm uppercase tracking-widest mb-6">Archived Files</h3>
-                <div className="space-y-4">
+                <h3 className="font-mono text-gold text-sm uppercase tracking-widest mb-4 sm:mb-6">Archived Files</h3>
+                <div className="space-y-3 sm:space-y-4">
                     {posts.map(post => (
-                        <div key={post.id} className="bg-card/50 border border-white/5 p-4 flex justify-between items-center group hover:border-gold/20 transition-colors">
-                            <div>
-                                <div className="flex items-center gap-3 mb-1">
-                                    <span className="text-[10px] font-mono text-gold border border-gold/20 px-2 py-0.5 uppercase">{post.category}</span>
-                                    <h4 className="font-bold text-lg">{post.title}</h4>
+                        <div key={post.id} className="bg-card/50 border border-white/5 p-4 sm:p-5 flex flex-col sm:flex-row justify-between sm:items-center gap-3 sm:gap-4 group hover:border-gold/20 transition-colors">
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 sm:gap-3 mb-1 flex-wrap">
+                                    <span className="text-[10px] font-mono text-gold border border-gold/20 px-2 py-0.5 uppercase whitespace-nowrap">{post.category}</span>
+                                    <h4 className="font-bold text-base sm:text-lg break-words">{post.title}</h4>
                                 </div>
                                 <div className="text-xs text-muted font-mono">
                                     {new Date(post.created_at).toLocaleDateString()} by {post.author || 'Unknown'}
                                 </div>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 sm:gap-3 self-end sm:self-center">
                                 <button
                                     onClick={() => handleEdit(post)}
-                                    className="p-2 text-accent hover:bg-accent/10 rounded transition-colors"
+                                    className="p-3 text-accent hover:bg-accent/10 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                                     title="Edit"
                                 >
-                                    <Edit size={16} />
+                                    <Edit size={18} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(post.id)}
-                                    className="p-2 text-red hover:bg-red/10 rounded transition-colors"
+                                    className="p-3 text-red hover:bg-red/10 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                                     title="Archive"
                                 >
-                                    <Trash2 size={16} />
+                                    <Trash2 size={18} />
                                 </button>
                             </div>
                         </div>
