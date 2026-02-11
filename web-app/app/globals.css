@@ -84,6 +84,27 @@ body {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
+
+  /* Ensure text colors are visible on mobile */
+  .text-muted {
+    color: var(--white) !important;
+    opacity: 0.9;
+  }
+
+  /* Fix any transparent text issues */
+  a,
+  button,
+  span,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 /* Touch-friendly interactions */

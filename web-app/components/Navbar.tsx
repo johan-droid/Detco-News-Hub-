@@ -132,16 +132,16 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {menuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-ink border-b border-gold/20 flex flex-col p-4 md:hidden animate-in slide-in-from-top-2 shadow-2xl">
+                <div className="absolute top-full left-0 right-0 bg-ink/98 backdrop-blur-lg border-b border-gold/30 flex flex-col p-4 md:hidden animate-in slide-in-from-top-2 shadow-2xl">
                     {sections.map((section) => {
                         const isActive = activeSection === section.id;
                         return (
                             <Link
                                 key={section.id}
                                 href={section.href}
-                                className={`relative font-mono text-left py-4 px-6 text-lg uppercase border-b border-white/5 last:border-0 transition-all ${isActive
-                                        ? "text-gold bg-gold/10 border-l-4 border-l-gold"
-                                        : "text-muted hover:text-white hover:bg-white/10 active:bg-gold/20 active:text-gold"
+                                className={`relative font-mono text-left py-4 px-6 text-lg uppercase border-b border-white/10 last:border-0 transition-all ${isActive
+                                    ? "text-gold bg-gold/15 border-l-4 border-l-gold"
+                                    : "text-white hover:text-gold hover:bg-white/10 active:bg-gold/20 active:text-gold"
                                     }`}
                                 onClick={() => setMenuOpen(false)}
                             >
