@@ -30,7 +30,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (CRITICAL: Never commit these!)
+# ============================================
+# ENVIRONMENT FILES (CRITICAL SECURITY!)
+# ============================================
+# NEVER commit files containing secrets, API keys, or passwords!
+# Only .env.example and .env.local.example should be committed as templates
+
+# All .env files with actual credentials
 .env
 .env.local
 .env.development.local
@@ -38,6 +44,17 @@ yarn-error.log*
 .env.production.local
 .env*.local
 
+# Backup and temporary env files
+.env.backup
+.env.bak
+.env.old
+.env.*.backup
+*.env.local
+*.env
+
+# ============================================
+# DEPLOYMENT & HOSTING
+# ============================================
 # vercel
 .vercel
 
@@ -45,13 +62,39 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# IDE
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.classpath
+.settings/
 
-# OS
+# ============================================
+# OS FILES
+# ============================================
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ============================================
+# SECURITY & SENSITIVE DATA
+# ============================================
+# Private keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Database files (if using local SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs that might contain sensitive data
+logs/
+*.log
