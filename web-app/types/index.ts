@@ -6,6 +6,7 @@ export type NewsItem = {
     created_at: string;
     image?: string;
     author?: string;
+    updated_at?: string;
 };
 
 export type CharacterItem = {

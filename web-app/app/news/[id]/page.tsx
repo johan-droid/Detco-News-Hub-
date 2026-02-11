@@ -102,6 +102,20 @@ export default function NewsDetail() {
                             {newsItem.author}
                         </span>
                     )}
+                    {newsItem.updated_at && newsItem.updated_at !== newsItem.created_at && (
+                        <span className="flex items-center gap-1 text-accent/80">
+                            <Clock size={12} />
+                            Last Updated: {new Date(newsItem.updated_at).toLocaleString('en-US', {
+                                timeZone: 'UTC',
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                timeZoneName: 'short'
+                            })}
+                        </span>
+                    )}
                 </motion.div>
 
                 {/* Title */}

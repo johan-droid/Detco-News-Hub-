@@ -6,14 +6,14 @@ import BackButton from "@/components/BackButton";
 import { useMemo } from "react";
 
 const authorData = Object.freeze({
-    name: "Johan Droid",
-    title: "Lead Developer & Content Creator",
-    bio: "Passionate Detective Conan enthusiast and full-stack developer with expertise in modern web technologies.",
-    skills: ["React", "Next.js", "TypeScript", "Node.js", "Database Design"],
+    name: "Gosho Aoyama",
+    title: "Manga Artist & Creator",
+    bio: "The legendary creator of Detective Conan (Case Closed), one of the longest-running and most beloved detective manga series in history.",
+    skills: ["Manga Illustration", "Mystery Writing", "Character Design", "Storytelling", "Plot Development"],
     achievements: [
-        { icon: BookOpen, title: "100+ Articles", description: "Comprehensive case analyses and theories" },
-        { icon: Star, title: "Expert Analyst", description: "Recognized for detailed detective work" },
-        { icon: Award, title: "Community Leader", description: "Active contributor to the DC community" }
+        { icon: BookOpen, title: "1000+ Chapters", description: "Over 1000 chapters of Detective Conan published" },
+        { icon: Star, title: "Multiple Awards", description: "Winner of prestigious Shogakukan Manga Awards" },
+        { icon: Award, title: "Cultural Icon", description: "Created one of Japan's most iconic detective series" }
     ]
 });
 

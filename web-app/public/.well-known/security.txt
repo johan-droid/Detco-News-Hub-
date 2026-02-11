@@ -1,0 +1,41 @@
+Contact: mailto:security@your-domain.com
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://your-domain.com/.well-known/security.txt
+
+# Security Policy for Detective Conan News Hub
+
+## Reporting Security Issues
+
+If you discover a security vulnerability, please report it to us at:
+- Email: security@your-domain.com
+
+Please do NOT create public GitHub issues for security vulnerabilities.
+
+## What to Include
+
+When reporting security issues, please include:
+- Description of the vulnerability
+- Steps to reproduce
+- Potential impact
+- Suggested fix (if any)
+
+## Response Time
+
+We aim to respond to security reports within 48 hours.
+
+## Scope
+
+This security policy applies to:
+- The Detective Conan News Hub web application
+- Admin authentication system
+- Database interactions
+- API endpoints
+
+## Out of Scope
+
+- Third-party services (Supabase, etc.)
+- Social engineering attacks
+- Physical security
+
+Thank you for helping keep our platform secure!

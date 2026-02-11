@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Lock, LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X, Upload } from "lucide-react";
 import BackButton from "@/components/BackButton";
+import { sanitizeInput, sanitizeHTML, validateTitle, validateContent, validateCategory } from "@/lib/security";
 
 type Post = {
     id: string;
@@ -14,6 +15,7 @@ type Post = {
     image: string;
     author: string;
     created_at: string;
+    updated_at?: string;
 };
 
 const CATEGORIES = Object.freeze(["BREAKING", "MANGA", "ANIME", "THEORY", "EVENTS"] as const);
@@ -22,7 +24,7 @@ const INITIAL_FORM_STATE = Object.freeze({
     content: "" as string,
     category: "BREAKING" as const,
     image: "" as string,
-    author: "" as string,
+    author: "Gosho Aoyama" as string,
 });
 
 export default function AdminDashboard() {
@@ -60,8 +62,10 @@ export default function AdminDashboard() {
         });
 
         if (error) {
-            setLoginError(error.message);
+            setLoginError("Invalid credentials");
         }
+        // Clear the password input for security
+        setLoginSecret("");
     }, [loginSecret]);
 
     const handleLogout = useCallback(async () => {
@@ -124,15 +128,38 @@ export default function AdminDashboard() {
 
     const handleSave = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.title || !formData.content) return alert("Title and Content are required");
 
-        const payload = { ...formData };
+        // Validate inputs
+        const titleValidation = validateTitle(formData.title);
+        if (!titleValidation.valid) {
+            return alert(titleValidation.error);
+        }
+
+        const contentValidation = validateContent(formData.content);
+        if (!contentValidation.valid) {
+            return alert(contentValidation.error);
+        }
+
+        const categoryValidation = validateCategory(formData.category);
+        if (!categoryValidation.valid) {
+            return alert(categoryValidation.error);
+        }
+
+        // Sanitize inputs
+        const payload = {
+            title: sanitizeInput(formData.title),
+            content: sanitizeHTML(formData.content),
+            category: formData.category,
+            image: sanitizeInput(formData.image),
+            author: sanitizeInput(formData.author),
+        };
 
         let error;
         if (editingId) {
+            // Update existing post with updated_at timestamp
             const { error: err } = await supabase
                 .from("news")
-                .update(payload)
+                .update({ ...payload, updated_at: new Date().toISOString() })
                 .eq("id", editingId);
             error = err;
         } else {
@@ -186,8 +213,54 @@ export default function AdminDashboard() {
             if (session) fetchPosts();
         });
 
-        return () => subscription.unsubscribe();
-    }, [fetchPosts]);
+        // Auto-logout on page visibility change (tab switch, minimize, etc.)
+        const handleVisibilityChange = () => {
+            if (document.hidden && session) {
+                supabase.auth.signOut();
+            }
+        };
+
+        // Auto-logout when page is about to unload (close tab, navigate away)
+        const handleBeforeUnload = () => {
+            if (session) {
+                supabase.auth.signOut();
+            }
+        };
+
+        // Auto-logout after 15 minutes of inactivity
+        let inactivityTimer: NodeJS.Timeout;
+        const resetInactivityTimer = () => {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                if (session) {
+                    supabase.auth.signOut();
+                    alert("Session expired due to inactivity. Please log in again.");
+                }
+            }, 15 * 60 * 1000); // 15 minutes
+        };
+
+        // Track user activity
+        const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+        activityEvents.forEach(event => {
+            document.addEventListener(event, resetInactivityTimer);
+        });
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        // Start inactivity timer
+        if (session) resetInactivityTimer();
+
+        return () => {
+            subscription.unsubscribe();
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            activityEvents.forEach(event => {
+                document.removeEventListener(event, resetInactivityTimer);
+            });
+            clearTimeout(inactivityTimer);
+        };
+    }, [fetchPosts, session]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-ink text-gold font-mono">Loading Console...</div>;
 
