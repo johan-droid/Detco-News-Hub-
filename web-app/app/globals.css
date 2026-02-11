@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  /* Theme Colors */
+  --ink: #0a0a0f;
+  --deep: #0f0f1a;
+  --coal: #161622;
+  --card: #1a1a2e;
+  --border: #2a2a45;
+  --gold: #c9a84c;
+  --gold-light: #e8c96e;
+  --gold-dim: rgba(201, 168, 76, 0.15);
+  --red: #c0392b;
+  --red-glow: rgba(192, 57, 43, 0.2);
+  --white: #f4f0e8;
+  --muted: #8a8a9a;
+  --accent: #4a90d9;
+
+  --background: var(--ink);
+  --foreground: var(--white);
+}
+
+@theme {
+  --color-ink: var(--ink);
+  --color-deep: var(--deep);
+  --color-coal: var(--coal);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dim: var(--gold-dim);
+  --color-red: var(--red);
+  --color-red-glow: var(--red-glow);
+  --color-white: var(--white);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  /* cursor: none; */
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.35;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 3px;
+}
+
+/* UTILITIES */
+.text-gold {
+  color: var(--gold);
+}
+
+.text-muted {
+  color: var(--muted);
+}
