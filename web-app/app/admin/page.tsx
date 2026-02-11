@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { Lock, LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 type Post = {
     id: string;
@@ -205,6 +206,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen bg-ink text-white p-6 md:p-12 font-body">
+            <BackButton className="mb-6" text="Back to Site" />
             <Script src="https://upload-widget.cloudinary.com/global/all.js" strategy="lazyOnload" />
 
             <div className="max-w-5xl mx-auto">

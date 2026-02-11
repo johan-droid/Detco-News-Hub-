@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { ArrowLeft, Clock, User, Tag } from "lucide-react";
+import { Clock, User, Tag } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import type { NewsItem } from "@/types";
 import { motion } from "framer-motion";
 
@@ -67,15 +68,7 @@ export default function NewsDetail() {
         <main className="min-h-screen bg-ink text-white font-body selection:bg-gold/30 selection:text-white">
             <article className="max-w-4xl mx-auto px-4 py-12 md:py-20">
                 {/* Header Navigation */}
-                <motion.button
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    onClick={() => router.push("/#news")}
-                    className="flex items-center gap-2 text-muted hover:text-gold mb-12 font-mono text-xs uppercase tracking-widest transition-colors group"
-                >
-                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                    Back to News Console
-                </motion.button>
+                <BackButton className="mb-6" text="Back to News" />
 
                 {/* Meta Info */}
                 <motion.div

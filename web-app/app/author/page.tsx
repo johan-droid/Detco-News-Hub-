@@ -2,10 +2,14 @@
 
 import { motion } from "framer-motion";
 import { PenTool, Calendar, Award, BookOpen, Star } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 export default function AuthorPage() {
     return (
         <main className="min-h-screen bg-ink text-white font-body selection:bg-gold/30 selection:text-white pt-24 pb-12">
+            <div className="container mx-auto px-4">
+                <BackButton className="mb-8" text="Back to Home" />
+            </div>
 
             {/* Hero Section */}
             <section className="relative px-4 mb-24">

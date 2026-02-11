@@ -79,9 +79,9 @@ export default function Characters() {
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    whileHover={{ y: -10, scale: 1.02 }}
-                                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                                    className="bg-card/40 backdrop-blur-md border border-white/5 p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[300px] flex flex-col justify-end"
+                                    whileHover={{ y: -5 }} // Removed scale to prevent jitter
+                                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                                    className="bg-card/60 border border-white/5 p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[300px] flex flex-col justify-end transition-colors hover:border-gold/30" // Removed backdrop-blur-md
                                     style={{ borderColor: `${color}33` }}
                                 >
                                     {/* Background Gradient & Glow */}
