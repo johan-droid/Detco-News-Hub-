@@ -23,7 +23,7 @@ export default function Hero() {
     return (
         <section
             id="home"
-            className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 md:px-8 pt-24 pb-12"
+            className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 md:px-8 pt-20 md:pt-24 pb-12"
         >
             {/* Background Grid */}
             <div
@@ -35,16 +35,16 @@ export default function Hero() {
                 }}
             />
 
-            {/* Background Orbs */}
+            {/* Background Orbs - Optimized for mobile */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-accent/20 blur-[100px]" />
-                <div className="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] rounded-full bg-gold/15 blur-[100px]" />
-                <div className="absolute top-[40%] left-[40%] w-[300px] h-[300px] rounded-full bg-purple-500/10 blur-[80px]" />
+                <div className="absolute top-[-10%] right-[-5%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-accent/20 blur-[60px] md:blur-[100px]" />
+                <div className="absolute bottom-[-5%] left-[-5%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] rounded-full bg-gold/15 blur-[60px] md:blur-[100px]" />
+                <div className="absolute top-[40%] left-[40%] w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full bg-purple-500/10 blur-[50px] md:blur-[80px]" />
             </div>
 
-            <div className="relative z-10 max-w-4xl w-full grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative z-10 max-w-4xl w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center">
                 {/* Content */}
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -58,7 +58,7 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.1 }}
-                        className="font-display font-black text-5xl md:text-8xl leading-[0.9] tracking-tight text-white drop-shadow-lg"
+                        className="font-display font-black text-4xl sm:text-6xl md:text-8xl leading-[0.9] tracking-tight text-white drop-shadow-lg"
                     >
                         <span className="block">DETECTIVE</span>
                         <span className="block text-gold italic tracking-wide">CONAN</span>
@@ -68,10 +68,10 @@ export default function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.4 }}
-                        className="h-20"
+                        className="h-auto md:h-20 min-h-[60px]"
                     >
-                        <div className="border-l-4 border-gold pl-4 py-1">
-                            <p key={quoteIdx} className="font-display italic text-lg md:text-xl text-white/80 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="border-l-4 border-gold pl-3 md:pl-4 py-1">
+                            <p key={quoteIdx} className="font-display italic text-base md:text-lg lg:text-xl text-white/80 animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 "{detectiveQuotes[quoteIdx]}"
                             </p>
                         </div>
@@ -81,12 +81,12 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="flex flex-wrap gap-4 pt-4"
+                        className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 pt-2 md:pt-4"
                     >
-                        <a href="#about" className="bg-gold text-ink font-mono text-xs md:text-sm tracking-widest font-bold py-3 px-6 md:py-4 md:px-8 uppercase hover:bg-gold-light transition-transform hover:-translate-y-1 polygon-clip">
+                        <a href="#about" className="bg-gold text-ink font-mono text-xs md:text-sm tracking-widest font-bold py-3.5 px-6 md:py-4 md:px-8 uppercase hover:bg-gold-light transition-transform hover:-translate-y-1 polygon-clip text-center min-h-[44px] flex items-center justify-center">
                             Start Investigating
                         </a>
-                        <a href="#news" className="flex items-center gap-2 text-muted hover:text-white font-mono text-xs md:text-sm tracking-widest uppercase transition-colors group">
+                        <a href="#news" className="flex items-center justify-center sm:justify-start gap-2 text-muted hover:text-white font-mono text-xs md:text-sm tracking-widest uppercase transition-colors group min-h-[44px]">
                             Latest News <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </a>
                     </motion.div>

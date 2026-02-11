@@ -39,17 +39,17 @@ export default function Characters() {
     }, [selectedChar]);
 
     return (
-        <section id="characters" className="bg-ink py-24 px-4 relative overflow-hidden">
+        <section id="characters" className="bg-ink py-12 md:py-24 px-4 relative overflow-hidden">
             {/* Background decoration */}
             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
+                <div className="text-center mb-12 md:mb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="font-mono text-xs tracking-[0.3em] text-gold uppercase mb-4"
+                        className="font-mono text-xs tracking-[0.3em] text-gold uppercase mb-3 md:mb-4"
                     >
                         👥 The Cast
                     </motion.div>
@@ -57,7 +57,7 @@ export default function Characters() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="font-display font-bold text-4xl md:text-5xl"
+                        className="font-display font-bold text-3xl md:text-4xl lg:text-5xl"
                     >
                         Iconic <span className="text-accent italic">Characters</span>
                     </motion.h2>
@@ -68,7 +68,7 @@ export default function Characters() {
                         Identifying suspects...
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                         {characters.map((c, i) => {
                             const color = c.color || "#c9a84c";
                             return (
@@ -81,7 +81,7 @@ export default function Characters() {
                                     viewport={{ once: true }}
                                     whileHover={{ y: -5 }} // Removed scale to prevent jitter
                                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                                    className="bg-card/60 border border-white/5 p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[300px] flex flex-col justify-end transition-colors hover:border-gold/30" // Removed backdrop-blur-md
+                                    className="bg-card/60 border border-white/5 p-4 md:p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[280px] md:h-[300px] flex flex-col justify-end transition-colors hover:border-gold/30" // Removed backdrop-blur-md
                                     style={{ borderColor: `${color}33` }}
                                 >
                                     {/* Background Gradient & Glow */}
@@ -102,14 +102,14 @@ export default function Characters() {
                                     <div className="relative z-10">
                                         <div className="flex justify-between items-start mb-2">
                                             <div
-                                                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl border border-white/10 bg-black/20 backdrop-blur-sm shadow-lg"
+                                                className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl border border-white/10 bg-black/20 backdrop-blur-sm shadow-lg"
                                                 style={{ color: color, borderColor: color }}
                                             >
                                                 {c.emoji || "👤"}
                                             </div>
                                             {c.faction && (
                                                 <span
-                                                    className="text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-black/40 border border-white/10"
+                                                    className="text-[9px] md:text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-black/40 border border-white/10"
                                                     style={{ color: color }}
                                                 >
                                                     {c.faction}
@@ -117,19 +117,19 @@ export default function Characters() {
                                             )}
                                         </div>
 
-                                        <h3 className="font-display font-bold text-2xl mb-1 text-white group-hover:text-gold transition-colors">
+                                        <h3 className="font-display font-bold text-xl md:text-2xl mb-1 text-white group-hover:text-gold transition-colors">
                                             {c.name}
                                         </h3>
 
                                         {c.role && (
-                                            <p className="font-mono text-xs text-muted mb-3 uppercase tracking-widest">{c.role}</p>
+                                            <p className="font-mono text-[10px] md:text-xs text-muted mb-2 md:mb-3 uppercase tracking-widest">{c.role}</p>
                                         )}
 
-                                        <p className="text-sm text-muted/80 line-clamp-2 mb-4 group-hover:text-white/90 transition-colors">
+                                        <p className="text-xs md:text-sm text-muted/80 line-clamp-2 mb-3 md:mb-4 group-hover:text-white/90 transition-colors">
                                             {c.description}
                                         </p>
 
-                                        <div className="flex items-center gap-2 text-gold text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                                        <div className="flex items-center gap-2 text-gold text-[10px] md:text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                                             <span>Access File</span>
                                             <span className="group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
@@ -154,39 +154,39 @@ export default function Characters() {
 
                     <motion.div
                         layoutId={`card-${selectedChar.id}`}
-                        className="bg-card w-full max-w-2xl border border-gold/20 shadow-2xl relative z-10 overflow-hidden flex flex-col md:flex-row max-h-[80vh] md:max-h-none"
+                        className="bg-card w-full max-w-2xl border border-gold/20 shadow-2xl relative z-10 overflow-hidden flex flex-col md:flex-row max-h-[85vh] md:max-h-[80vh]"
                     >
                         <button
-                            className="absolute top-4 right-4 z-20 text-white/50 hover:text-white transition-colors"
+                            className="absolute top-2 right-2 md:top-4 md:right-4 z-20 text-white/50 hover:text-white transition-colors w-11 h-11 flex items-center justify-center text-2xl bg-black/50 rounded-full md:bg-transparent"
                             onClick={() => setSelectedChar(null)}
                         >
                             ✕
                         </button>
 
-                        <div className="w-full md:w-1/3 bg-black/20 relative min-h-[200px] md:min-h-0">
+                        <div className="w-full md:w-1/3 bg-black/20 relative min-h-[180px] md:min-h-0">
                             {selectedChar.image ? (
                                 <img src={selectedChar.image} alt={selectedChar.name} className="w-full h-full object-cover" />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-6xl bg-gradient-to-b from-transparent to-black/50" style={{ color: selectedChar.color }}>
+                                <div className="w-full h-full flex items-center justify-center text-5xl md:text-6xl bg-gradient-to-b from-transparent to-black/50" style={{ color: selectedChar.color }}>
                                     {selectedChar.emoji || "👤"}
                                 </div>
                             )}
-                            <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/90 to-transparent">
-                                <div className="font-mono text-xs text-gold uppercase tracking-widest mb-1">Role</div>
-                                <div className="text-white font-bold">{selectedChar.role || "Unknown"}</div>
+                            <div className="absolute bottom-0 left-0 w-full p-3 md:p-4 bg-gradient-to-t from-black/90 to-transparent">
+                                <div className="font-mono text-[10px] md:text-xs text-gold uppercase tracking-widest mb-1">Role</div>
+                                <div className="text-white font-bold text-sm md:text-base">{selectedChar.role || "Unknown"}</div>
                             </div>
                         </div>
 
-                        <div className="p-8 md:w-2/3 overflow-y-auto">
-                            <h2 className="font-display font-bold text-3xl mb-2" style={{ color: selectedChar.color }}>{selectedChar.name}</h2>
+                        <div className="p-5 md:p-8 md:w-2/3 overflow-y-auto">
+                            <h2 className="font-display font-bold text-2xl md:text-3xl mb-2" style={{ color: selectedChar.color }}>{selectedChar.name}</h2>
                             {selectedChar.real_name && (
-                                <div className="font-mono text-sm text-muted mb-6">Real Identity: <span className="text-white">{selectedChar.real_name}</span></div>
+                                <div className="font-mono text-xs md:text-sm text-muted mb-4 md:mb-6">Real Identity: <span className="text-white">{selectedChar.real_name}</span></div>
                             )}
 
-                            <div className="space-y-6">
+                            <div className="space-y-4 md:space-y-6">
                                 <div>
                                     <h3 className="font-mono text-xs text-gold uppercase tracking-widest mb-2 border-b border-white/10 pb-1">Profile</h3>
-                                    <p className="text-muted leading-relaxed">
+                                    <p className="text-muted leading-relaxed text-sm md:text-base">
                                         {selectedChar.description || "No detailed profile available for this character."}
                                     </p>
                                 </div>

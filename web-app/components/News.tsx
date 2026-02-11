@@ -45,14 +45,14 @@ export default function News() {
     };
 
     return (
-        <section id="news" className="bg-ink py-24 px-4 border-t border-white/5">
+        <section id="news" className="bg-ink py-12 md:py-24 px-4 border-t border-white/5">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
+                <div className="text-center mb-12 md:mb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="font-mono text-xs tracking-[0.3em] text-red uppercase mb-4"
+                        className="font-mono text-xs tracking-[0.3em] text-red uppercase mb-3 md:mb-4"
                     >
                         📰 Latest Updates
                     </motion.div>
@@ -60,7 +60,7 @@ export default function News() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="font-display font-bold text-4xl md:text-5xl"
+                        className="font-display font-bold text-3xl md:text-4xl lg:text-5xl"
                     >
                         Breaking <span className="text-white italic">News</span>
                     </motion.h2>
@@ -71,7 +71,7 @@ export default function News() {
                         Scanning for evidence...
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                         {newsItems.map((n: NewsItem, i: number) => {
                             const color = categoryColors[n.category] || "#c9a84c";
                             return (
@@ -81,15 +81,15 @@ export default function News() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    className="bg-card border border-white/5 p-8 group hover:border-gold/30 transition-all flex flex-col h-full relative overflow-hidden"
+                                    className="bg-card border border-white/5 p-5 md:p-8 group hover:border-gold/30 transition-all flex flex-col h-full relative overflow-hidden"
                                 >
                                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                         <FileText size={100} />
                                     </div>
 
-                                    <div className="flex justify-between items-start mb-6 relative z-10">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-0 mb-4 md:mb-6 relative z-10">
                                         <span
-                                            className="font-mono text-[10px] px-3 py-1 border uppercase tracking-widest"
+                                            className="font-mono text-[9px] md:text-[10px] px-2.5 md:px-3 py-1 border uppercase tracking-widest"
                                             style={{
                                                 color: color,
                                                 borderColor: `${color}44`,
@@ -98,22 +98,22 @@ export default function News() {
                                         >
                                             {n.category}
                                         </span>
-                                        <span className="font-mono text-xs text-muted">
+                                        <span className="font-mono text-[10px] md:text-xs text-muted">
                                             {formatDate(n.created_at)}
                                         </span>
                                     </div>
 
-                                    <h3 className="font-display font-bold text-2xl mb-4 group-hover:text-gold transition-colors duration-300 relative z-10">
+                                    <h3 className="font-display font-bold text-xl md:text-2xl mb-3 md:mb-4 group-hover:text-gold transition-colors duration-300 relative z-10">
                                         {n.title}
                                     </h3>
 
-                                    <p className="text-muted leading-relaxed text-sm mb-8 line-clamp-3 relative z-10 flex-grow">
+                                    <p className="text-muted leading-relaxed text-sm mb-6 md:mb-8 line-clamp-3 relative z-10 flex-grow">
                                         {n.content}
                                     </p>
 
                                     <Link
                                         href={`/news/${n.id}`}
-                                        className="relative z-10 inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-colors group-hover:gap-3 py-2 border-b border-transparent hover:border-current self-start"
+                                        className="relative z-10 inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-all group-hover:gap-3 py-2.5 md:py-2 border-b border-transparent hover:border-current self-start min-h-[44px] md:min-h-0"
                                         style={{ color: color }}
                                     >
                                         Read Case File <ArrowRight size={14} />

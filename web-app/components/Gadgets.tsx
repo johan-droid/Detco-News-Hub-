@@ -44,18 +44,18 @@ const gadgets = [
 
 export default function Gadgets() {
     return (
-        <section id="gadgets" className="bg-deep py-24 px-4 relative">
+        <section id="gadgets" className="bg-deep py-12 md:py-24 px-4 relative">
             <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
                 <Zap size={300} />
             </div>
 
             <div className="max-w-6xl mx-auto relative z-10">
-                <div className="text-center mb-16">
+                <div className="text-center mb-12 md:mb-16">
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="font-mono text-xs tracking-[0.3em] text-accent uppercase mb-4"
+                        className="font-mono text-xs tracking-[0.3em] text-accent uppercase mb-3 md:mb-4"
                     >
                         ⚡ Agasa's Inventions
                     </motion.div>
@@ -63,13 +63,13 @@ export default function Gadgets() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="font-display font-bold text-4xl md:text-5xl"
+                        className="font-display font-bold text-3xl md:text-4xl lg:text-5xl"
                     >
                         Detective <span className="text-gold italic">Gadgets</span>
                     </motion.h2>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     {gadgets.map((g, i) => (
                         <motion.div
                             key={i}
@@ -77,20 +77,20 @@ export default function Gadgets() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
-                            className="bg-card/50 border border-white/5 p-6 rounded hover:bg-card hover:border-gold/20 transition-all group"
+                            className="bg-card/50 border border-white/5 p-5 md:p-6 rounded hover:bg-card hover:border-gold/20 transition-all group"
                         >
                             <div
-                                className="w-12 h-12 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
+                                className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform"
                                 style={{
                                     backgroundColor: `${g.color}22`,
                                     color: g.color
                                 }}
                             >
-                                <g.icon size={24} />
+                                <g.icon size={20} className="md:w-6 md:h-6" />
                             </div>
 
-                            <h3 className="font-display font-bold text-xl mb-3 text-white group-hover:text-gold transition-colors">{g.name}</h3>
-                            <p className="text-muted text-sm leading-relaxed">{g.desc}</p>
+                            <h3 className="font-display font-bold text-lg md:text-xl mb-2 md:mb-3 text-white group-hover:text-gold transition-colors">{g.name}</h3>
+                            <p className="text-muted text-xs md:text-sm leading-relaxed">{g.desc}</p>
                         </motion.div>
                     ))}
                 </div>
