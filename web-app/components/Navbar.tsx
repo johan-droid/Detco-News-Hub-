@@ -83,74 +83,84 @@ export default function Navbar() {
     };
 
     return (
-        <nav
-            className={`fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 flex items-center justify-between transition-all duration-300 ${scrolled
-                ? "bg-ink/95 backdrop-blur-md border-b border-gold/15 py-3"
-                : "bg-transparent border-b border-transparent"
-                }`}
-        >
-            <div
-                className="flex items-center gap-2 cursor-pointer select-none group"
-                onClick={() => scrollTo("home")}
+        <>
+            <nav
+                className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 flex items-center justify-between bg-ink/95 backdrop-blur-md border-b border-gold/20"
             >
-                <Search className="w-6 h-6 text-gold transition-transform group-hover:scale-110" />
-                <span className="font-display font-bold text-lg tracking-widest text-white">
-                    DETCO<span className="text-gold">NEWS</span>HUB
-                </span>
-            </div>
+                <div
+                    className="flex items-center gap-2 cursor-pointer select-none group"
+                    onClick={() => scrollTo("home")}
+                >
+                    <Search className="w-6 h-6 text-gold transition-transform group-hover:scale-110" />
+                    <span className="font-display font-bold text-lg tracking-widest text-white">
+                        DETCO<span className="text-gold">NEWS</span>HUB
+                    </span>
+                </div>
 
-            {/* Desktop Links */}
-            <div className="hidden md:flex gap-8">
-                {sections.map((section) => {
-                    const isActive = activeSection === section.id;
-                    return (
-                        <Link
-                            key={section.id}
-                            href={section.href}
-                            className="relative font-mono text-sm tracking-widest uppercase transition-colors group"
-                        >
-                            <span className={`${isActive ? "text-gold" : "text-muted group-hover:text-white"}`}>
-                                {section.label}
-                            </span>
-                            {/* Active indicator line */}
-                            <span
-                                className={`absolute -bottom-1 left-0 h-[2px] bg-gold transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
-                                    }`}
-                            />
-                        </Link>
-                    );
-                })}
-            </div>
-
-            {/* Mobile Menu Toggle */}
-            <button
-                className="md:hidden text-gold hover:text-white transition-colors"
-                onClick={() => setMenuOpen(!menuOpen)}
-            >
-                {menuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-
-            {/* Mobile Menu */}
-            {menuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-ink/98 backdrop-blur-lg border-b border-gold/30 flex flex-col p-4 md:hidden animate-in slide-in-from-top-2 shadow-2xl">
+                {/* Desktop Links */}
+                <div className="hidden md:flex gap-8">
                     {sections.map((section) => {
                         const isActive = activeSection === section.id;
                         return (
                             <Link
                                 key={section.id}
                                 href={section.href}
-                                className={`relative font-mono text-left py-4 px-6 text-lg uppercase border-b border-white/10 last:border-0 transition-all ${isActive
-                                    ? "text-gold bg-gold/15 border-l-4 border-l-gold"
-                                    : "text-white hover:text-gold hover:bg-white/10 active:bg-gold/20 active:text-gold"
-                                    }`}
-                                onClick={() => setMenuOpen(false)}
+                                className="relative font-mono text-sm tracking-widest uppercase transition-colors group"
                             >
-                                {section.label}
+                                <span className={`${isActive ? "text-gold" : "text-muted group-hover:text-white"}`}>
+                                    {section.label}
+                                </span>
+                                {/* Active indicator line */}
+                                <span
+                                    className={`absolute -bottom-1 left-0 h-[2px] bg-gold transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
+                                        }`}
+                                />
                             </Link>
                         );
                     })}
                 </div>
+
+                {/* Mobile Menu Toggle */}
+                <button
+                    className="md:hidden text-gold hover:text-white transition-colors relative z-[100]"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {menuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
+            </nav>
+
+            {/* Mobile Menu Overlay - Rendered outside nav */}
+            {menuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] md:hidden"
+                    onClick={() => setMenuOpen(false)}
+                />
             )}
-        </nav>
+
+            {/* Mobile Menu - Rendered outside nav */}
+            {menuOpen && (
+                <div className="fixed top-[68px] left-0 right-0 bottom-0 bg-ink/98 backdrop-blur-xl border-t border-gold/30 flex flex-col md:hidden z-[70] overflow-y-auto">
+                    <div className="flex flex-col p-2">
+                        {sections.map((section) => {
+                            const isActive = activeSection === section.id;
+                            return (
+                                <Link
+                                    key={section.id}
+                                    href={section.href}
+                                    className={`relative font-mono text-left py-5 px-6 text-base uppercase border-b border-white/10 last:border-0 transition-all ${isActive
+                                        ? "text-gold bg-gold/15 border-l-4 border-l-gold"
+                                        : "text-white hover:text-gold hover:bg-white/10 active:bg-gold/20 active:text-gold"
+                                        }`}
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    {section.label}
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
