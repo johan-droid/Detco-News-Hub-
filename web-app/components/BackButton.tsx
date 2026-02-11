@@ -2,23 +2,24 @@
 
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
+import { memo, useCallback } from 'react';
 
 interface BackButtonProps {
   className?: string;
   text?: string;
 }
 
-export default function BackButton({ className = '', text = 'Back' }: BackButtonProps) {
+const BackButton = memo(({ className = '', text = 'Back' }: BackButtonProps) => {
   const router = useRouter();
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     if (window.history.length > 1) {
       router.back();
     } else {
       router.push('/');
     }
-  };
+  }, [router]);
 
   return (
     <button
@@ -30,4 +31,8 @@ export default function BackButton({ className = '', text = 'Back' }: BackButton
       <span className="text-sm font-medium">{text}</span>
     </button>
   );
-}
+});
+
+BackButton.displayName = 'BackButton';
+
+export default BackButton;

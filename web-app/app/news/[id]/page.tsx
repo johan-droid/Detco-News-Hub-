@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Clock, User, Tag } from "lucide-react";
@@ -8,13 +8,13 @@ import BackButton from "@/components/BackButton";
 import type { NewsItem } from "@/types";
 import { motion } from "framer-motion";
 
-const categoryColors: Record<string, string> = {
+const categoryColors: Record<string, string> = Object.freeze({
     BREAKING: "#c0392b",
     MANGA: "#c9a84c",
     ANIME: "#27ae60",
     THEORY: "#4A90D9",
     EVENTS: "#9B59B6",
-};
+});
 
 export default function NewsDetail() {
     const { id } = useParams();
@@ -40,6 +40,18 @@ export default function NewsDetail() {
         fetchNewsItem();
     }, [id]);
 
+    const formattedDate = useMemo(() => {
+        if (!newsItem) return '';
+        return new Date(newsItem.created_at).toLocaleDateString("en-US", {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+    }, [newsItem]);
+
+    const color = useMemo(() => {
+        if (!newsItem) return "#c9a84c";
+        return categoryColors[newsItem.category] || "#c9a84c";
+    }, [newsItem]);
+
     if (loading) {
         return (
             <div className="min-h-screen bg-ink flex items-center justify-center text-gold font-mono animate-pulse">
@@ -62,8 +74,6 @@ export default function NewsDetail() {
         );
     }
 
-    const color = categoryColors[newsItem.category] || "#c9a84c";
-
     return (
         <main className="min-h-screen bg-ink text-white font-body selection:bg-gold/30 selection:text-white">
             <article className="max-w-4xl mx-auto px-4 py-12 md:py-20">
@@ -84,9 +94,7 @@ export default function NewsDetail() {
                     </span>
                     <span className="flex items-center gap-1">
                         <Clock size={12} />
-                        {new Date(newsItem.created_at).toLocaleDateString("en-US", {
-                            year: 'numeric', month: 'long', day: 'numeric'
-                        })}
+                        {formattedDate}
                     </span>
                     {newsItem.author && (
                         <span className="flex items-center gap-1 text-white/60">

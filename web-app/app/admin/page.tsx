@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
@@ -17,6 +17,15 @@ type Post = {
     created_at: string;
 };
 
+const CATEGORIES = Object.freeze(["BREAKING", "MANGA", "ANIME", "THEORY", "EVENTS"] as const);
+const INITIAL_FORM_STATE = Object.freeze({
+    title: "" as string,
+    content: "" as string,
+    category: "BREAKING" as const,
+    image: "" as string,
+    author: "" as string,
+});
+
 declare global {
     interface Window {
         cloudinary: any;
@@ -30,37 +39,13 @@ export default function AdminDashboard() {
     const [editingId, setEditingId] = useState<string | null>(null);
 
     // Form State
-    const [formData, setFormData] = useState({
-        title: "",
-        content: "",
-        category: "BREAKING",
-        image: "",
-        author: "",
-    });
-
+    const [formData, setFormData] = useState(INITIAL_FORM_STATE);
     const [loginSecret, setLoginSecret] = useState("");
     const [loginError, setLoginError] = useState("");
 
     const router = useRouter();
 
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setLoading(false);
-            if (session) fetchPosts();
-        });
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            if (session) fetchPosts();
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    const fetchPosts = async () => {
+    const fetchPosts = useCallback(async () => {
         const { data, error } = await supabase
             .from("news")
             .select("*")
@@ -68,14 +53,12 @@ export default function AdminDashboard() {
 
         if (error) console.error("Error fetching posts:", error);
         else setPosts(data || []);
-    };
+    }, []);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleLogin = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         setLoginError("");
 
-        // by using a specific admin email + the secret as password.
-        // We use a fixed internal email so the user only deals with the "Security Key".
         const email = "admin@detco-internal.com";
         const { error } = await supabase.auth.signInWithPassword({
             email,
@@ -85,15 +68,15 @@ export default function AdminDashboard() {
         if (error) {
             setLoginError(error.message);
         }
-    };
+    }, [loginSecret]);
 
-    const handleLogout = async () => {
+    const handleLogout = useCallback(async () => {
         await supabase.auth.signOut();
-        router.push("/"); // Redirect to Home (News Portal)
+        router.push("/");
         router.refresh();
-    };
+    }, [router]);
 
-    const openWidget = () => {
+    const openWidget = useCallback(() => {
         if (window.cloudinary) {
             window.cloudinary.createUploadWidget(
                 {
@@ -104,25 +87,19 @@ export default function AdminDashboard() {
                 },
                 (error: any, result: any) => {
                     if (!error && result && result.event === "success") {
-                        setFormData({ ...formData, image: result.info.secure_url });
+                        setFormData(prev => ({ ...prev, image: result.info.secure_url }));
                     }
                 }
             ).open();
         }
-    };
+    }, []);
 
-    const resetForm = () => {
+    const resetForm = useCallback(() => {
         setEditingId(null);
-        setFormData({
-            title: "",
-            content: "",
-            category: "BREAKING",
-            image: "",
-            author: "",
-        });
-    };
+        setFormData(INITIAL_FORM_STATE);
+    }, []);
 
-    const handleSave = async (e: React.FormEvent) => {
+    const handleSave = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.title || !formData.content) return alert("Title and Content are required");
 
@@ -148,27 +125,46 @@ export default function AdminDashboard() {
             resetForm();
             fetchPosts();
         }
-    };
+    }, [formData, editingId, resetForm, fetchPosts]);
 
-    const handleEdit = (post: Post) => {
+    const handleEdit = useCallback((post: Post) => {
         setEditingId(post.id);
         setFormData({
             title: post.title,
             content: post.content,
-            category: post.category,
+            category: post.category as typeof INITIAL_FORM_STATE.category,
             image: post.image,
             author: post.author,
         });
         window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    }, []);
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = useCallback(async (id: string) => {
         if (!confirm("Are you sure you want to archive this case file?")) return;
 
         const { error } = await supabase.from("news").delete().eq("id", id);
         if (error) alert("Error deleting: " + error.message);
         else fetchPosts();
-    };
+    }, [fetchPosts]);
+
+    const postsList = useMemo(() => posts, [posts]);
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            setLoading(false);
+            if (session) fetchPosts();
+        });
+
+        const {
+            data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+            if (session) fetchPosts();
+        });
+
+        return () => subscription.unsubscribe();
+    }, [fetchPosts]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-ink text-gold font-mono">Loading Console...</div>;
 
@@ -251,7 +247,7 @@ export default function AdminDashboard() {
                                 <label className="block font-mono text-xs text-muted uppercase mb-2">Category</label>
                                 <select
                                     value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value as typeof INITIAL_FORM_STATE.category })}
                                     className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none appearance-none"
                                 >
                                     <option value="BREAKING">BREAKING</option>

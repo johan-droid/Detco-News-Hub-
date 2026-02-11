@@ -3,8 +3,23 @@
 import { motion } from "framer-motion";
 import { PenTool, Calendar, Award, BookOpen, Star } from "lucide-react";
 import BackButton from "@/components/BackButton";
+import { useMemo } from "react";
+
+const authorData = Object.freeze({
+    name: "Johan Droid",
+    title: "Lead Developer & Content Creator",
+    bio: "Passionate Detective Conan enthusiast and full-stack developer with expertise in modern web technologies.",
+    skills: ["React", "Next.js", "TypeScript", "Node.js", "Database Design"],
+    achievements: [
+        { icon: BookOpen, title: "100+ Articles", description: "Comprehensive case analyses and theories" },
+        { icon: Star, title: "Expert Analyst", description: "Recognized for detailed detective work" },
+        { icon: Award, title: "Community Leader", description: "Active contributor to the DC community" }
+    ]
+});
 
 export default function AuthorPage() {
+    const skillsList = useMemo(() => authorData.skills, []);
+    const achievementsList = useMemo(() => authorData.achievements, []);
     return (
         <main className="min-h-screen bg-ink text-white font-body selection:bg-gold/30 selection:text-white pt-24 pb-12">
             <div className="container mx-auto px-4">
@@ -19,27 +34,22 @@ export default function AuthorPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <div className="mb-8">
-                            <a href="/" className="inline-flex items-center gap-2 text-gold hover:text-white transition-colors font-mono text-xs uppercase tracking-widest border border-gold/20 px-4 py-2 hover:bg-gold/10">
-                                ← Back to Home
-                            </a>
-                        </div>
                         <div className="relative">
                             <div className="absolute -top-10 -left-10 text-[200px] text-white/5 font-display font-bold leading-none select-none">
                                 GA
                             </div>
                             <h1 className="font-display font-bold text-5xl md:text-7xl mb-6 relative z-10">
-                                Gosho <br />
-                                <span className="text-gold italic">Aoyama</span>
+                                {authorData.name.split(' ')[0]} <br />
+                                <span className="text-gold italic">{authorData.name.split(' ')[1]}</span>
                             </h1>
                         </div>
                         <p className="text-muted text-lg leading-relaxed mb-8 border-l-2 border-gold/30 pl-6">
-                            The mastermind behind the "Greatest Little Detective". A manga artist whose unwavering dedication has captivated millions of fans worldwide for over three decades.
+                            {authorData.bio}
                         </p>
 
                         <div className="flex gap-4 text-xs font-mono uppercase tracking-widest text-muted/60">
-                            <span className="flex items-center gap-2"><PenTool size={14} className="text-gold" /> Manga Artist</span>
-                            <span className="flex items-center gap-2"><Star size={14} className="text-gold" /> Storyteller</span>
+                            <span className="flex items-center gap-2"><PenTool size={14} className="text-gold" /> {authorData.title.split(' & ')[0]}</span>
+                            <span className="flex items-center gap-2"><Star size={14} className="text-gold" /> {authorData.title.split(' & ')[1]}</span>
                         </div>
                     </motion.div>
 
