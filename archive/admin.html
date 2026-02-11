@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DetCo News Hub - Admin Console</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --card: #1a1a2e;
+            --text: #f4f0e8;
+            --gold: #c9a84c;
+            --red: #c0392b;
+            --blue: #4a90d9;
+            --border: rgba(224, 201, 122, 0.15);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* LOGIN */
+        .login-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        .login-box {
+            background: var(--card);
+            border: 1px solid var(--gold);
+            padding: 3rem;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+            color: var(--gold);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: var(--gold);
+            color: var(--bg);
+            border: none;
+            padding: 1rem 2rem;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            display: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .logout-btn {
+            background: var(--red);
+            width: auto;
+            padding: 0.5rem 1rem;
+            margin-top: 0;
+        }
+
+        .editor-section {
+            background: var(--card);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .preview-img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 1rem;
+            border: 1px solid var(--gold);
+            display: none;
+        }
+
+        /* POST LIST */
+        .news-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .news-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .news-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-edit {
+            background: var(--blue);
+            width: auto;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            margin-top: 0;
+        }
+
+        .btn-del {
+            background: var(--red);
+            width: auto;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            margin-top: 0;
+        }
+    </style>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- CLOUDINARY -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- LOGIN SECTION -->
+        <div id="login-section" class="login-wrap">
+            <div class="login-box">
+                <h2 style="color:var(--gold); margin-bottom:2rem;">RESTRICTED ACCESS</h2>
+                <div class="input-group">
+                    <label>Admin Secret</label>
+                    <input type="password" id="admin-secret" placeholder="Enter Access Key">
+                </div>
+                <button onclick="handleLogin()">AUTHENTICATE</button>
+                <p id="login-error" style="color:var(--red); margin-top:1rem; display:none;">Access Denied</p>
+            </div>
+        </div>
+
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard-section" class="dashboard">
+            <div class="header">
+                <h1>DetCo News Console</h1>
+                <button class="logout-btn" onclick="handleLogout()">LOGOUT</button>
+            </div>
+
+            <div class="editor-section">
+                <h3 style="color:var(--gold); border-bottom:1px solid var(--border); padding-bottom:0.5rem;">New Case
+                    File</h3>
+                <div class="input-group">
+                    <label>Headline</label>
+                    <input type="text" id="post-title" placeholder="e.g. Black Organization Sighting...">
+                </div>
+                <!-- EDITOR NAME -->
+                <div class="input-group">
+                    <label>Editor Name</label>
+                    <input type="text" id="post-author" placeholder="e.g. Conan Edogawa">
+                </div>
+                <div class="input-group">
+                    <label>Category</label>
+                    <select id="post-category">
+                        <option value="BREAKING">BREAKING</option>
+                        <option value="MANGA">MANGA</option>
+                        <option value="ANIME">ANIME</option>
+                        <option value="THEORY">THEORY</option>
+                        <option value="EVENTS">EVENTS</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Report Details</label>
+                    <textarea id="post-content" rows="6" placeholder="Full report content..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Evidence (Image)</label>
+                    <button type="button" id="upload_widget" style="background:var(--blue); width:auto;">Upload
+                        Evidence</button>
+                    <input type="hidden" id="post-image">
+                    <img id="preview-image" class="preview-img">
+                </div>
+                <button onclick="savePost()" id="save-btn">PUBLISH REPORT</button>
+                <button onclick="cancelEdit()" id="cancel-btn"
+                    style="background:#444; margin-top:0.5rem; display:none;">CANCEL EDIT</button>
+            </div>
+
+            <h3 style="color:var(--gold);">Archived Files</h3>
+            <div id="news-list" class="news-list">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        // REPLACE THESE WITH YOUR ACTUAL CREDENTIALS
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const CLOUDINARY_CLOUD_NAME = 'YOUR_CLOUD_NAME';
+        const CLOUDINARY_PRESET = 'YOUR_UPLOAD_PRESET';
+
+        // Initialize Supabase
+        let supabase;
+        try {
+            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            console.error("Supabase init failed. Check credentials.");
+        }
+
+        let editingId = null;
+
+        // --- AUTHENTICATION ---
+        async function handleLogin() {
+            const secret = document.getElementById('admin-secret').value;
+            // Simple secret check locally is insecure for real apps, but for this simpler setup:
+            // We will actually try to sign in with a hardcoded email and the secret as password.
+            // Setup an admin user in Supabase Auth user table: admin@detconews.com
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: 'admin@detconews.com',
+                password: secret
+            });
+
+            if (error) {
+                document.getElementById('login-error').style.display = 'block';
+                document.getElementById('login-error').innerText = "Access Denied: " + error.message;
+            } else {
+                showDashboard();
+                loadNews();
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+
+        function showDashboard() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+        }
+
+        // Check session on load
+        if (typeof supabase !== 'undefined') {
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                if (session) {
+                    showDashboard();
+                    loadNews();
+                }
+            });
+        }
+
+        // --- CLOUDINARY ---
+        let myWidget;
+        if (typeof cloudinary !== 'undefined') {
+            myWidget = cloudinary.createUploadWidget({
+                cloudName: CLOUDINARY_CLOUD_NAME,
+                uploadPreset: CLOUDINARY_PRESET,
+                sources: ['local', 'url'],
+                multiple: false
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log('Done! Here is the image info: ', result.info);
+                    document.getElementById('post-image').value = result.info.secure_url;
+                    const preview = document.getElementById('preview-image');
+                    preview.src = result.info.secure_url;
+                    preview.style.display = 'block';
+                }
+            });
+
+            document.getElementById("upload_widget").addEventListener("click", function () {
+                myWidget.open();
+            }, false);
+        }
+
+        // --- CRUD OPERATIONS ---
+        async function loadNews() {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Error loading news:", error);
+                return;
+            }
+
+            const list = document.getElementById('news-list');
+            list.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'news-item';
+                div.innerHTML = `
+                    <div>
+                        <strong style="color:var(--gold)">[${item.category}]</strong> ${item.title}
+                        <br><span style="font-size:0.8rem; color:#aaa">${new Date(item.created_at).toLocaleDateString()} by ${item.author || 'Unknown'}</span>
+                    </div>
+                    <div class="news-actions">
+                        <button class="btn-edit" onclick="editPost('${item.id}')">EDIT</button>
+                        <button class="btn-del" onclick="deletePost('${item.id}')">ARCHIVE</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function savePost() {
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const category = document.getElementById('post-category').value;
+            const image = document.getElementById('post-image').value;
+            const author = document.getElementById('post-author').value;
+
+            if (!title || !content) {
+                alert("Please fill in at least Title and Content");
+                return;
+            }
+
+            const payload = {
+                title, content, category, image, author
+            };
+
+            let error;
+            if (editingId) {
+                const { error: err } = await supabase
+                    .from('news')
+                    .update(payload)
+                    .eq('id', editingId);
+                error = err;
+            } else {
+                const { error: err } = await supabase
+                    .from('news')
+                    .insert([payload]);
+                error = err;
+            }
+
+            if (error) {
+                alert("Error saving: " + error.message);
+            } else {
+                resetForm();
+                loadNews();
+            }
+        }
+
+        async function deletePost(id) {
+            if (!confirm("Are you sure you want to archive this case file?")) return;
+
+            const { error } = await supabase
+                .from('news')
+                .delete()
+                .eq('id', id);
+
+            if (error) alert("Error deleting: " + error.message);
+            else loadNews();
+        }
+
+        async function editPost(id) {
+            const { data, error } = await supabase
+                .from('news')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (data) {
+                editingId = id;
+                document.getElementById('post-title').value = data.title;
+                document.getElementById('post-content').value = data.content;
+                document.getElementById('post-category').value = data.category || 'General';
+                document.getElementById('post-image').value = data.image || '';
+                document.getElementById('post-author').value = data.author || '';
+
+                if (data.image) {
+                    const preview = document.getElementById('preview-image');
+                    preview.src = data.image;
+                    preview.style.display = 'block';
+                }
+
+                document.getElementById('save-btn').innerText = "UPDATE REPORT";
+                document.getElementById('cancel-btn').style.display = 'block';
+                document.getElementById('cancel-btn').onclick = cancelEdit;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function cancelEdit() {
+            resetForm();
+        }
+
+        function resetForm() {
+            editingId = null;
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-category').value = 'BREAKING';
+            document.getElementById('post-image').value = '';
+            document.getElementById('post-author').value = '';
+            document.getElementById('preview-image').style.display = 'none';
+            document.getElementById('save-btn').innerText = "PUBLISH REPORT";
+            document.getElementById('cancel-btn').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

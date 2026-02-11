@@ -1,4 +1,10 @@
 {
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "framework": "nextjs",
+    "buildCommand": "next build",
+    "installCommand": "npm install",
+    "cleanUrls": true,
+    "trailingSlash": false,
     "headers": [
         {
             "source": "/(.*)",
@@ -14,6 +20,10 @@
                 {
                     "key": "X-XSS-Protection",
                     "value": "1; mode=block"
+                },
+                {
+                    "key": "Referrer-Policy",
+                    "value": "strict-origin-when-cross-origin"
                 }
             ]
         }

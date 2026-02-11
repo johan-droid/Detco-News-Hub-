@@ -1,0 +1,2708 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DetCo News Hub — The Case Never Closes</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0a0a0f;
+      --deep: #0f0f1a;
+      --coal: #161622;
+      --card: #1a1a2e;
+      --border: #2a2a45;
+      --gold: #c9a84c;
+      --gold-light: #e8c96e;
+      --gold-dim: rgba(201, 168, 76, 0.15);
+      --red: #c0392b;
+      --red-glow: rgba(192, 57, 43, 0.2);
+      --white: #f4f0e8;
+      --muted: #8a8a9a;
+      --accent: #4a90d9;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Crimson Pro', Georgia, serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0.35;
+    }
+
+    /* NAVBAR */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(10, 10, 15, 0.98), transparent);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--white);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    .nav-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .btn-news {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: var(--red);
+      color: #fff;
+      padding: 0.5rem 1.3rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      transition: background 0.25s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-news:hover {
+      background: #e74c3c;
+      transform: translateY(-1px);
+    }
+
+    .btn-news .news-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+      animation: blink 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(0.6);
+      }
+    }
+
+    /* NEWS MODAL */
+    .news-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: rgba(10, 10, 15, 0.92);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+    }
+
+    .news-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .news-modal {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--red);
+      width: 90%;
+      max-width: 860px;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .news-modal-overlay.open .news-modal {
+      transform: translateY(0);
+    }
+
+    .news-modal::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .news-modal::-webkit-scrollbar-track {
+      background: var(--card);
+    }
+
+    .news-modal::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    .news-modal-header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--deep);
+      z-index: 1;
+    }
+
+    .news-modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .news-modal-badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .news-modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+    }
+
+    .news-modal-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .news-close {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .news-close:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .news-filter-bar {
+      padding: 1rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .news-filter {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .news-filter.active,
+    .news-filter:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-dim);
+    }
+
+    .news-list {
+      padding: 1.5rem 2.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .news-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      padding: 1.3rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: pointer;
+    }
+
+    .news-item:hover {
+      border-color: var(--gold);
+      transform: translateX(4px);
+    }
+
+    .news-date-block {
+      text-align: center;
+      padding: 0.8rem 0.5rem;
+      background: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .news-day {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--gold);
+    }
+
+    .news-month {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .news-item-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag-manga {
+      background: rgba(201, 168, 76, 0.15);
+      color: var(--gold);
+    }
+
+    .tag-anime {
+      background: rgba(74, 144, 217, 0.15);
+      color: #4a90d9;
+    }
+
+    .tag-movie {
+      background: rgba(192, 57, 43, 0.15);
+      color: var(--red);
+    }
+
+    .tag-event {
+      background: rgba(46, 213, 115, 0.15);
+      color: #2ed573;
+    }
+
+    .news-item-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.4rem;
+    }
+
+    .news-item-excerpt {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .news-item-meta {
+      margin-top: 0.6rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--border);
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 8rem 4rem 4rem;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 80% at 80% 80%, rgba(74, 144, 217, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 10% 50%, rgba(192, 57, 43, 0.05) 0%, transparent 50%),
+        linear-gradient(175deg, #0a0a0f 0%, #0f0f1a 50%, #0d0d18 100%);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    .hero-title .line-2 {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .hero-title .line-3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    .hero-desc {
+      margin-top: 2.5rem;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: rgba(244, 240, 232, 0.7);
+      max-width: 520px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-actions {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+
+    .btn-primary {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.3s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--white);
+    }
+
+    .btn-secondary::before {
+      content: '▶';
+      font-size: 0.6rem;
+      color: var(--red);
+    }
+
+    .hero-visual {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 55%;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 1.5s 0.3s forwards;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 70%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 70%);
+      filter: sepia(20%) contrast(110%) brightness(0.8);
+    }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 4rem;
+      right: 4rem;
+      z-index: 3;
+      display: flex;
+      gap: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 1.2s forwards;
+    }
+
+    .stat {
+      text-align: right;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+
+    /* BREAKING NEWS TICKER */
+    .ticker {
+      background: var(--red);
+      padding: 0.7rem 0;
+      overflow: hidden;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 4rem;
+      animation: ticker 30s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ticker-item::before {
+      content: '◆';
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.5rem;
+    }
+
+    .ticker-label {
+      background: white;
+      color: var(--red);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      padding: 0.15rem 0.5rem;
+      margin-right: 1rem;
+    }
+
+    /* SECTION STYLES */
+    section {
+      padding: 7rem 4rem;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about::before {
+      content: '"The truth is always one"';
+      position: absolute;
+      right: -2rem;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: rgba(201, 168, 76, 0.06);
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-image-wrap {
+      position: relative;
+    }
+
+    .about-image-frame {
+      position: relative;
+    }
+
+    .about-image-frame::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      right: 15px;
+      bottom: 15px;
+      border: 1px solid var(--gold);
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .about-image-frame::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: -15px;
+      bottom: -15px;
+      border: 1px solid var(--border);
+      z-index: 0;
+    }
+
+    .about-image-frame img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      position: relative;
+      z-index: 1;
+      filter: sepia(15%) contrast(108%);
+    }
+
+    .about-tag {
+      position: absolute;
+      bottom: -1rem;
+      right: -1rem;
+      z-index: 2;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.7rem 1.2rem;
+      clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+    }
+
+    .about-content p {
+      font-size: 1.15rem;
+      line-height: 1.9;
+      color: rgba(244, 240, 232, 0.8);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .fact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+      border-left: 3px solid var(--gold);
+    }
+
+    .fact-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .fact-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* CHARACTERS SECTION */
+    .characters {
+      background: var(--ink);
+    }
+
+    .chars-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .char-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .char-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-6px);
+    }
+
+    .char-card:hover .char-overlay {
+      opacity: 1;
+    }
+
+    .char-card:hover .char-img {
+      filter: sepia(20%) contrast(108%) brightness(1.05);
+    }
+
+    .char-img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      filter: sepia(10%) contrast(105%) brightness(0.9);
+      transition: filter 0.4s;
+    }
+
+    .char-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, rgba(10, 10, 15, 0.4) 50%, transparent 70%);
+      opacity: 0.7;
+      transition: opacity 0.4s;
+    }
+
+    .char-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+    }
+
+    .char-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .char-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .char-desc {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: rgba(244, 240, 232, 0.7);
+      margin-top: 0.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s;
+    }
+
+    .char-card:hover .char-desc {
+      max-height: 80px;
+    }
+
+    .char-featured {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .char-featured .char-img {
+      height: 300px;
+    }
+
+    /* PLOT SECTION */
+    .plot {
+      background: var(--coal);
+    }
+
+    .plot-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+    }
+
+    .case-files {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .case-file {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .case-file.active,
+    .case-file:hover {
+      border-left-color: var(--gold);
+      background: rgba(201, 168, 76, 0.05);
+    }
+
+    .case-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .case-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .case-active .case-title {
+      color: var(--gold);
+    }
+
+    .plot-content {
+      position: relative;
+    }
+
+    .plot-quote {
+      border-left: 3px solid var(--gold);
+      padding: 2rem 2.5rem;
+      background: var(--card);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .plot-quote::before {
+      content: '"';
+      font-family: 'Playfair Display', serif;
+      font-size: 6rem;
+      line-height: 0;
+      color: var(--gold-dim);
+      position: absolute;
+      top: 2rem;
+      left: 1rem;
+    }
+
+    .plot-quote p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--white);
+      position: relative;
+      z-index: 1;
+    }
+
+    .plot-quote cite {
+      display: block;
+      margin-top: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      font-style: normal;
+      text-transform: uppercase;
+    }
+
+    .plot-text p {
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: rgba(244, 240, 232, 0.8);
+      margin-bottom: 1.2rem;
+    }
+
+    /* MANGA VOLUMES SECTION */
+    .volumes {
+      background: var(--ink);
+      overflow: hidden;
+    }
+
+    .volumes-scroll-wrap {
+      position: relative;
+    }
+
+    .volumes-track {
+      display: flex;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+    }
+
+    .volumes-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .vol-card {
+      min-width: 160px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      background: var(--card);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .vol-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .vol-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .vol-title {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .vol-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--border);
+      margin-top: 0.5rem;
+      letter-spacing: 0.1em;
+    }
+
+    .volumes-info {
+      margin-top: 3rem;
+    }
+
+    .volumes-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .vol-info-item {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .vol-info-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .vol-info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .vol-info-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* AUTHOR TRIBUTE SECTION */
+    .author {
+      background: linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 40%, #0d0d18 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .author::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 70% at 20% 50%, rgba(201, 168, 76, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 30%, rgba(74, 144, 217, 0.04) 0%, transparent 50%);
+    }
+
+    .author-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .author-portrait-wrap {
+      position: sticky;
+      top: 8rem;
+    }
+
+    .author-portrait {
+      position: relative;
+    }
+
+    .author-portrait img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      object-position: top;
+      filter: sepia(20%) contrast(108%) brightness(0.85) grayscale(10%);
+      display: block;
+    }
+
+    .author-portrait::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      z-index: -1;
+    }
+
+    .author-portrait::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to top, var(--ink), transparent);
+    }
+
+    .author-badge {
+      margin-top: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-top: 3px solid var(--gold);
+    }
+
+    .author-badge-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .author-badge-name span {
+      color: var(--gold);
+    }
+
+    .author-badge-birth {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .author-tribute-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .tribute-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .tribute-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .tribute-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .tribute-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 1.5rem 0;
+    }
+
+    .tribute-body p {
+      font-size: 1.15rem;
+      line-height: 1.9;
+      color: rgba(244, 240, 232, 0.85);
+      margin-bottom: 1.5rem;
+    }
+
+    .tribute-body p strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .author-milestones {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .milestone {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--border);
+      background: rgba(26, 26, 46, 0.5);
+      transition: border-color 0.3s;
+    }
+
+    .milestone:hover {
+      border-color: var(--gold);
+    }
+
+    .milestone-year {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      min-width: 50px;
+      margin-top: 0.2rem;
+    }
+
+    .milestone-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(244, 240, 232, 0.8);
+    }
+
+    .milestone-text strong {
+      color: var(--white);
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .thank-you-box {
+      margin-top: 3rem;
+      padding: 2.5rem;
+      border: 1px solid var(--gold);
+      background: var(--gold-dim);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thank-you-box::before {
+      content: '♡';
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 8rem;
+      color: rgba(201, 168, 76, 0.06);
+      line-height: 1;
+    }
+
+    .thank-you-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .thank-you-box h3 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .thank-you-box p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(244, 240, 232, 0.85);
+    }
+
+    .thank-you-signature {
+      margin-top: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .thank-you-signature::before {
+      content: '—';
+    }
+
+    /* ANIME INFO */
+    .anime-info {
+      background: var(--deep);
+    }
+
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+    }
+
+    .info-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--gold);
+      transition: height 0.4s;
+    }
+
+    .info-card:hover::before {
+      height: 100%;
+    }
+
+    .info-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .info-card-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(244, 240, 232, 0.7);
+    }
+
+    .info-card-detail {
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* NEWSLETTER */
+    .newsletter {
+      background: var(--ink);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .newsletter-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .newsletter-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-right: none;
+      color: var(--white);
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .newsletter-form input::placeholder {
+      color: var(--muted);
+    }
+
+    .newsletter-form input:focus {
+      border-color: var(--gold);
+    }
+
+    .newsletter-form button {
+      padding: 1rem 2rem;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .newsletter-form button:hover {
+      background: var(--gold-light);
+    }
+
+    /* FOOTER REDESIGN */
+    footer {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      padding: 0;
+    }
+
+    .footer-fan-banner {
+      background: linear-gradient(90deg, rgba(192, 57, 43, 0.08) 0%, rgba(201, 168, 76, 0.08) 50%, rgba(74, 144, 217, 0.08) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .fan-banner-icon {
+      font-size: 1.3rem;
+    }
+
+    .fan-banner-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .fan-banner-text strong {
+      color: var(--gold);
+    }
+
+    .fan-banner-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .footer-main {
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-brand-logo span {
+      color: var(--white);
+    }
+
+    .footer-brand-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .footer-brand-tag::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--red);
+    }
+
+    .footer-brand-desc {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 300px;
+      margin-bottom: 2rem;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 0.7rem;
+    }
+
+    .footer-social-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.9rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.25s;
+      display: inline-block;
+    }
+
+    .footer-social-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .footer-col-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.93rem;
+      transition: color 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-links a::before {
+      content: '→';
+      font-size: 0.6rem;
+      color: var(--border);
+      transition: color 0.25s;
+      flex-shrink: 0;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-links a:hover::before {
+      color: var(--gold);
+    }
+
+    /* CREDITS SECTION */
+    .footer-credits {
+      padding: 3rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 10, 15, 0.5);
+    }
+
+    .footer-credits-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-credits-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .credit-card {
+      padding: 1.3rem 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-left: 3px solid var(--gold);
+    }
+
+    .credit-card-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .credit-card-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+
+    .credit-card-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .credit-card-note a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .credit-card-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* DISCLAIMER BOX */
+    .footer-disclaimer-box {
+      margin-top: 2rem;
+      padding: 1.5rem 2rem;
+      border: 1px dashed rgba(201, 168, 76, 0.3);
+      background: rgba(201, 168, 76, 0.04);
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    .disclaimer-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .disclaimer-heading {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .disclaimer-text {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: rgba(244, 240, 232, 0.65);
+    }
+
+    .disclaimer-text strong {
+      color: var(--white);
+    }
+
+    /* FOOTER BOTTOM BAR */
+    .footer-bottom-bar {
+      padding: 1.5rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-bottom-left {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-bottom-left a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .footer-bottom-left a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-heart {
+      color: var(--red);
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      14% {
+        transform: scale(1.3);
+      }
+
+      28% {
+        transform: scale(1);
+      }
+
+      42% {
+        transform: scale(1.2);
+      }
+    }
+
+    .footer-bottom-right {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-sep {
+      color: var(--border);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(8px);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* DETECTIVE TAPE */
+    .tape-line {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .tape {
+      background: var(--gold);
+      color: var(--ink);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0 50%);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="nav-logo">DetCo <span>News Hub</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#characters">Characters</a></li>
+      <li><a href="#plot">Cases</a></li>
+      <li><a href="#volumes">Manga</a></li>
+      <li><a href="#author">Author</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="btn-news" id="openNews">
+        <span class="news-dot"></span>
+        Latest News
+      </a>
+      <div class="nav-badge">Case File · Open</div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-visual">
+      <img src="https://placehold.co/1200x800/1a1a2e/c9a84c?text=Detective+Conan+Hero"
+        alt="Detective Conan Night City" />
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Case No. 001 · Est. 1994</div>
+      <h1 class="hero-title">
+        Detective<br>
+        <span class="line-2">Conan</span>
+        <span class="line-3">The Case Never Closes</span>
+      </h1>
+      <p class="hero-desc">
+        Your ultimate destination for all things Meitantei Conan — from the latest chapter breakdowns to case theory
+        deep-dives. There is always only one truth.
+      </p>
+      <div class="hero-actions">
+        <a href="#about" class="btn-primary">Start Investigating</a>
+        <a href="#volumes" class="btn-secondary">Browse Case Files</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-number">1,100+</div>
+        <div class="stat-label">Chapters</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">30</div>
+        <div class="stat-label">Years Running</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">1000+</div>
+        <div class="stat-label">Anime Episodes</div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <div class="ticker-item"><span class="ticker-label">BREAKING</span> New chapter released — Conan closes in on a
+        new Black Organization lead</div>
+      <div class="ticker-item"><span class="ticker-label">UPDATES</span> Detective Conan movie 27 announced for 2024
+        spring release</div>
+      <div class="ticker-item"><span class="ticker-label">MANGA</span> Volume 103 now available — featuring the Rum
+        revelation arc continuation</div>
+      <div class="ticker-item"><span class="ticker-label">EVENTS</span> Gosho Aoyama Museum celebrating 30th anniversary
+        of the series this year</div>
+      <div class="ticker-item"><span class="ticker-label">BREAKING</span> New chapter released — Conan closes in on a
+        new Black Organization lead</div>
+      <div class="ticker-item"><span class="ticker-label">UPDATES</span> Detective Conan movie 27 announced for 2024
+        spring release</div>
+      <div class="ticker-item"><span class="ticker-label">MANGA</span> Volume 103 now available — featuring the Rum
+        revelation arc continuation</div>
+      <div class="ticker-item"><span class="ticker-label">EVENTS</span> Gosho Aoyama Museum celebrating 30th anniversary
+        of the series this year</div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-image-wrap reveal">
+        <div class="about-image-frame">
+          <img src="https://m.media-amazon.com/images/I/81GaSuMH5LL._SL1500_.jpg" alt="Conan Edogawa"
+            onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/d/db/Detective_Conan_volume_1.jpg/220px-Detective_Conan_volume_1.jpg'" />
+          <div class="author-tag"
+            style="position:absolute;bottom:-1rem;right:-1rem;z-index:2;background:var(--gold);color:var(--ink);font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.7rem 1.2rem;">
+            Since 1994</div>
+        </div>
+      </div>
+      <div class="about-content reveal reveal-delay-2">
+        <div class="section-label">About the Series</div>
+        <h2 class="section-title">One <em>Truth</em> Prevails</h2>
+        <div class="tape-line">
+          <div class="tape">Case Summary</div>
+        </div>
+        <p>
+          <em>Detective Conan</em> (名探偵コナン, Meitantei Konan) is a Japanese mystery manga series written and illustrated
+          by the brilliant Gosho Aoyama. Serialized in Weekly Shōnen Sunday since January 19, 1994, it has grown into
+          one of the longest-running and most beloved manga franchises in history.
+        </p>
+        <p>
+          The story follows <strong>Shinichi Kudo</strong> — a prodigious teenage detective who is transformed into a
+          child after being force-fed a mysterious poison by members of a shadowy criminal syndicate known as the
+          <strong>Black Organization</strong>. Hiding his identity under the alias <em>Conan Edogawa</em>, he works to
+          unravel the organization's secrets while solving murder cases alongside the Mouri Detective Agency.
+        </p>
+        <div class="about-facts">
+          <div class="fact-card">
+            <div class="fact-label">Original Title</div>
+            <div class="fact-value">名探偵コナン</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-label">Publisher</div>
+            <div class="fact-value">Shōnen Sunday</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-label">Genre</div>
+            <div class="fact-value">Mystery · Detective</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-label">First Aired</div>
+            <div class="fact-value">January 8, 1996</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-label">Studio</div>
+            <div class="fact-value">TMS Entertainment</div>
+          </div>
+          <div class="fact-card">
+            <div class="fact-label">Licensed by</div>
+            <div class="fact-value">Funimation (NA)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section class="characters" id="characters">
+    <div class="section-label reveal">The Key Players</div>
+    <h2 class="section-title reveal reveal-delay-1">The <em>Cast</em> of the Case</h2>
+    <div class="chars-grid" id="chars-grid-container">
+      <!-- Dynamic Characters will load here -->
+      <div style="color:var(--muted); grid-column:span 4; text-align:center;">Loading Personas...</div>
+    </div>
+  </section>
+
+  <!-- PLOT / CASES -->
+  <section class="plot" id="plot">
+    <div class="section-label reveal">Story Arcs</div>
+    <h2 class="section-title reveal reveal-delay-1">The Great <em>Cases</em></h2>
+    <div class="plot-layout" style="margin-top:3rem;">
+      <div class="case-files reveal">
+        <div class="case-file active">
+          <div class="case-number">Case File #001</div>
+          <div class="case-title">The APTX 4869 Incident</div>
+        </div>
+        <div class="case-file">
+          <div class="case-number">Case File #114</div>
+          <div class="case-title">Vermouth Arc</div>
+        </div>
+        <div class="case-file">
+          <div class="case-number">Case File #345</div>
+          <div class="case-title">The Clash of Red & Black</div>
+        </div>
+        <div class="case-file">
+          <div class="case-number">Case File #701</div>
+          <div class="case-title">The Scarlet Return</div>
+        </div>
+        <div class="case-file">
+          <div class="case-number">Case File #898</div>
+          <div class="case-title">Rum Arc · Ongoing</div>
+        </div>
+        <div class="case-file">
+          <div class="case-number">MOVIE 26</div>
+          <div class="case-title">Black Iron Submarine</div>
+        </div>
+      </div>
+      <div class="plot-content reveal reveal-delay-2">
+        <div class="plot-quote">
+          <p>"There is always only one truth!"</p>
+          <cite>— Shinichi Kudo / Conan Edogawa</cite>
+        </div>
+        <div class="plot-text">
+          <p>
+            The central mystery of Detective Conan has captivated fans for three decades: the shadowy <strong>Black
+              Organization</strong> — a criminal syndicate operating in the shadows of the world, forcing experimental
+            drugs on their enemies and eliminating witnesses without mercy.
+          </p>
+          <p>
+            At its heart, the story is not just about crimes and deductions — it is a story of an extraordinary love
+            between Shinichi and Ran, stretched across the impossibility of a boy trapped in a child's body, waiting for
+            the day he can stand before her as himself and say the words he's always meant to say.
+          </p>
+          <p>
+            With every new case, every revelation about Rum, Vermouth, and the elusive boss <strong>Renya
+              Karasuma</strong>, the threads grow tighter. As fans, we've waited — joyfully, obsessively — for thirty
+            years. And the truth? It's worth every chapter.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VOLUMES -->
+  <section class="volumes" id="volumes">
+    <div class="section-label reveal">The Collection</div>
+    <h2 class="section-title reveal reveal-delay-1">Manga <em>Volumes</em></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);font-size:1.1rem;margin-top:1rem;margin-bottom:2rem;">
+      With over 103 volumes published and counting — Detective Conan is the 4th best-selling manga series of all time.
+    </p>
+    <div class="volumes-scroll-wrap reveal reveal-delay-2">
+      <div class="volumes-track" id="volTrack">
+        <div class="vol-card">
+          <div class="vol-number">01</div>
+          <div class="vol-title">The Roller Coaster Murder Case</div>
+          <div class="vol-year">1994</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">05</div>
+          <div class="vol-title">Holmes Devotee's Murder Case</div>
+          <div class="vol-year">1995</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">10</div>
+          <div class="vol-title">The Sea of Blood</div>
+          <div class="vol-year">1996</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">16</div>
+          <div class="vol-title">Vermouth Appears</div>
+          <div class="vol-year">1998</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">24</div>
+          <div class="vol-title">New York Crime Case</div>
+          <div class="vol-year">2000</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">31</div>
+          <div class="vol-title">Confrontation with Vermouth</div>
+          <div class="vol-year">2002</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">40</div>
+          <div class="vol-title">The Red, White, and Yellow</div>
+          <div class="vol-year">2004</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">50</div>
+          <div class="vol-title">Conan's Deduction Note</div>
+          <div class="vol-year">2007</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">60</div>
+          <div class="vol-title">Clash of Red and Black</div>
+          <div class="vol-year">2009</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">72</div>
+          <div class="vol-title">The Missing Scarlet Investigation</div>
+          <div class="vol-year">2012</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">83</div>
+          <div class="vol-title">Rum's Shadow</div>
+          <div class="vol-year">2015</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">90</div>
+          <div class="vol-title">Rum Revelation Begins</div>
+          <div class="vol-year">2017</div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-number">100</div>
+          <div class="vol-title">Century Mark</div>
+          <div class="vol-year">2021</div>
+        </div>
+        <div class="vol-card" style="border-color:var(--gold)">
+          <div class="vol-number" style="color:var(--red)">103</div>
+          <div class="vol-title">Current · Ongoing</div>
+          <div class="vol-year">2024</div>
+        </div>
+      </div>
+    </div>
+    <div class="volumes-info">
+      <div class="volumes-info-grid reveal">
+        <div class="vol-info-item">
+          <div class="vol-info-icon">📚</div>
+          <div class="vol-info-title">4th Best-Selling Manga</div>
+          <div class="vol-info-text">Over 270 million volumes sold worldwide, making it one of the greatest manga
+            achievements in history.</div>
+        </div>
+        <div class="vol-info-item">
+          <div class="vol-info-icon">🎬</div>
+          <div class="vol-info-title">26 Feature Films</div>
+          <div class="vol-info-text">Annual theatrical films have become a Japanese cultural tradition, consistently
+            breaking box office records.</div>
+        </div>
+        <div class="vol-info-item">
+          <div class="vol-info-icon">🌍</div>
+          <div class="vol-info-title">Global Phenomenon</div>
+          <div class="vol-info-text">Translated into over 20 languages, broadcast in 30+ countries — a detective story
+            that transcends borders.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANIME INFO -->
+  <section class="anime-info" id="anime">
+    <div class="section-label reveal">The Animation</div>
+    <h2 class="section-title reveal reveal-delay-1">30 Years of <em>Anime</em> Excellence</h2>
+    <div class="info-cards">
+      <div class="info-card reveal reveal-delay-1">
+        <div class="info-card-icon">🎙️</div>
+        <div class="info-card-title">Iconic Voice Cast</div>
+        <div class="info-card-text">Minami Takayama brings Conan to life with a duality that captures both the child's
+          innocence and the teen detective's razor wit. A performance for the ages.</div>
+        <div class="info-card-detail">Japanese VA · Conan: Minami Takayama</div>
+      </div>
+      <div class="info-card reveal reveal-delay-2">
+        <div class="info-card-icon">🎵</div>
+        <div class="info-card-title">Legendary Soundtracks</div>
+        <div class="info-card-text">Composed by Katsuo Ohno, the Detective Conan OST is one of anime's most
+          recognizable. From tense investigation tracks to tender moments — music is at the soul of the show.</div>
+        <div class="info-card-detail">Composer · Katsuo Ohno</div>
+      </div>
+      <div class="info-card reveal reveal-delay-3">
+        <div class="info-card-icon">🔭</div>
+        <div class="info-card-title">The Detective Gadgets</div>
+        <div class="info-card-text">Voice-changing bowtie. Turbo skateboard. Power-enhancing shoes. Anesthetic watch.
+          Dr. Agasa's inventions have become iconic symbols of the series' ingenious creativity.</div>
+        <div class="info-card-detail">Inventor · Professor Hiroshi Agasa</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHOR TRIBUTE -->
+  <section class="author" id="author">
+    <div class="author-inner">
+      <div class="author-portrait-wrap reveal">
+        <div class="author-portrait">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Gosho_Aoyama.jpg/440px-Gosho_Aoyama.jpg"
+            alt="Gosho Aoyama"
+            onerror="this.src='https://www.animenewsnetwork.com/thumbnails/max250x400/cms/person/147553/people.20061018001641.jpg'" />
+        </div>
+        <div class="author-badge">
+          <div class="author-badge-name">Gosho <span>Aoyama</span></div>
+          <div class="author-badge-birth">青山 剛昌 · Born June 21, 1963 · Hokuei, Tottori, Japan</div>
+        </div>
+      </div>
+      <div class="author-tribute-text reveal reveal-delay-2">
+        <div class="author-tribute-header">
+          <div class="section-label">A Fan's Tribute</div>
+          <h2 class="tribute-title">Thank You,<br><em>Aoyama Sensei</em></h2>
+          <p class="tribute-subtitle">A heartfelt letter from every Detective Conan fan on Earth</p>
+          <div class="tribute-divider"></div>
+        </div>
+        <div class="tribute-body">
+          <p>
+            In 1994, a manga artist from the small town of Hokuei, Tottori picked up his pen and gave the world a gift
+            it didn't know it needed: a story about truth, justice, and the unbreakable human spirit of a boy who
+            refuses to give up — no matter what body he's been forced into.
+          </p>
+          <p>
+            <strong>Gosho Aoyama Sensei</strong>, you built a universe from mystery and wonder. You gave us Conan
+            Edogawa — a character who taught us that the greatest weapon is a sharp mind, not a strong fist. You gave us
+            Ran and Shinichi, and a love story stretched across impossible odds that has made us laugh, cry, and hold
+            our breath for three decades.
+          </p>
+          <p>
+            Through your pen, you built the Beika district into a city as real to us as our own hometowns. You filled it
+            with characters who feel like old friends — Heiji and Kazuha, Hakuba, Agasa-san, Ai Haibara, and even the
+            maddening, fascinating villains of the Black Organization.
+          </p>
+          <p>
+            You have dealt with health challenges, continued to work tirelessly for your readers, and delivered chapter
+            after chapter of breathtaking storytelling. We see your dedication. We feel your love for this story.
+            <strong>And we are endlessly grateful.</strong>
+          </p>
+        </div>
+        <div class="author-milestones">
+          <div class="milestone">
+            <div class="milestone-year">1987</div>
+            <div class="milestone-text"><strong>Debut in Sunday</strong>Aoyama's debut manga "Chotto Mattete" launches
+              in Weekly Shōnen Sunday</div>
+          </div>
+          <div class="milestone">
+            <div class="milestone-year">1994</div>
+            <div class="milestone-text"><strong>Detective Conan Begins</strong>Chapter 1 published January 19 — Shinichi
+              Kudo's first case and transformation</div>
+          </div>
+          <div class="milestone">
+            <div class="milestone-year">1996</div>
+            <div class="milestone-text"><strong>Anime Adaptation Launches</strong>TMS Entertainment brings Conan to
+              television — instantly a ratings phenomenon</div>
+          </div>
+          <div class="milestone">
+            <div class="milestone-year">2007</div>
+            <div class="milestone-text"><strong>Gosho Aoyama Manga Factory</strong>His hometown museum opens in Hokuei,
+              Tottori — a pilgrimage site for fans worldwide</div>
+          </div>
+          <div class="milestone">
+            <div class="milestone-year">2024</div>
+            <div class="milestone-text"><strong>30th Anniversary</strong>Celebrating three decades of mysteries, with no
+              signs of stopping until the final truth</div>
+          </div>
+        </div>
+        <div class="thank-you-box">
+          <h3>Arigato, <span>Sensei</span> 🔍</h3>
+          <p>
+            From every fan who stayed up late waiting for the next chapter, who theorized about Rum's identity, who
+            cried during Shinichi's phone call to Ran in London — <em>thank you</em>. For the mysteries, the humor, the
+            heartbreak, and the hope. We'll be here until the very last page.
+          </p>
+          <div class="thank-you-signature">DetCo News Hub, on behalf of fans everywhere</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="newsletter-inner">
+      <div class="section-label reveal" style="justify-content:center;">Stay Updated</div>
+      <h2 class="newsletter-title reveal reveal-delay-1">Never Miss a <em
+          style="color:var(--gold);font-style:italic;">Clue</em></h2>
+      <p class="newsletter-desc reveal reveal-delay-2">
+        Subscribe to DetCo News Hub and receive the latest chapter analysis, movie news, and theory deep-dives —
+        straight to your inbox.
+      </p>
+      <div class="newsletter-form reveal reveal-delay-3">
+        <input type="email" placeholder="Your email address..." />
+        <button>Investigate →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS MODAL -->
+  <div class="news-modal-overlay" id="newsModal">
+    <div class="news-modal">
+      <div class="news-modal-header">
+        <div class="news-modal-header-left">
+          <div class="news-modal-badge"><span class="news-dot"
+              style="background:var(--red);width:6px;height:6px;border-radius:50%;animation:blink 1.2s infinite;flex-shrink:0;"></span>
+            Live Updates</div>
+          <h2 class="news-modal-title">DetCo <em>Newsroom</em></h2>
+        </div>
+        <button class="news-close" id="closeNews">✕</button>
+      </div>
+      <div class="news-filter-bar">
+        <button class="news-filter active">All</button>
+        <button class="news-filter">Manga</button>
+        <button class="news-filter">Anime</button>
+        <button class="news-filter">Movies</button>
+        <button class="news-filter">Events</button>
+      </div>
+      <div class="news-list" id="news-grid-container">
+        <!-- Dynamic News will load here -->
+        <div style="color:var(--muted); text-align:center; padding:2rem;">Fetching Latest Reports...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <!-- Fan Page Banner -->
+    <div class="footer-fan-banner">
+      <span class="fan-banner-icon">🔍</span>
+      <div class="fan-banner-text">This is a <strong>non-commercial fan portal</strong>. We do not sell, distribute, or
+        claim ownership of any Detective Conan content.</div>
+      <div class="fan-banner-sep"></div>
+      <span class="fan-banner-icon">📰</span>
+      <div class="fan-banner-text">DetCo News Hub is a <strong>news aggregation & fan community</strong> site — purely
+        for informational & fan purposes.</div>
+      <div class="fan-banner-sep"></div>
+      <span class="fan-banner-icon">❤️</span>
+      <div class="fan-banner-text">Made with love by fans, <strong>for fans</strong> worldwide.</div>
+    </div>
+
+    <!-- Main Footer Grid -->
+    <div class="footer-main">
+      <div class="footer-brand-col">
+        <div class="footer-brand-logo">DetCo <span>News Hub</span></div>
+        <div class="footer-brand-tag">Fan News Portal</div>
+        <p class="footer-brand-desc">
+          Your go-to destination for the latest Detective Conan news, chapter breakdowns, theory deep-dives, and fan
+          discussions. We are not affiliated with or endorsed by Shogakukan, TMS Entertainment, or Gosho Aoyama.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social-btn">Twitter</a>
+          <a href="#" class="footer-social-btn">Discord</a>
+          <a href="#" class="footer-social-btn">Reddit</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Explore</div>
+        <ul class="footer-links">
+          <li><a href="#about">About the Series</a></li>
+          <li><a href="#characters">Characters</a></li>
+          <li><a href="#plot">Story Arcs</a></li>
+          <li><a href="#volumes">Manga Volumes</a></li>
+          <li><a href="#author">Author Tribute</a></li>
+          <li><a href="#" id="footerNews">Latest News</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Official Links</div>
+        <ul class="footer-links">
+          <li><a href="https://websunday.net" target="_blank" rel="noopener">Weekly Shōnen Sunday</a></li>
+          <li><a href="https://www.conan-movie.jp" target="_blank" rel="noopener">Official Conan Movie Site</a></li>
+          <li><a href="https://www.tms-e.co.jp" target="_blank" rel="noopener">TMS Entertainment</a></li>
+          <li><a href="https://www.shogakukan.co.jp" target="_blank" rel="noopener">Shogakukan</a></li>
+          <li><a href="https://aoyama.tottori.jp" target="_blank" rel="noopener">Aoyama Museum</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Credits Section -->
+    <div class="footer-credits">
+      <div class="footer-credits-title">Intellectual Property Credits & Attribution</div>
+      <div class="credits-grid">
+        <div class="credit-card">
+          <div class="credit-card-label">Original Work & Story</div>
+          <div class="credit-card-value">Gosho Aoyama (青山 剛昌)</div>
+          <div class="credit-card-note">All story, characters, and world of Detective Conan are the sole intellectual
+            property of Gosho Aoyama. We are eternal fans of his genius.</div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-label">Publisher & Manga Rights</div>
+          <div class="credit-card-value">Shogakukan Inc.</div>
+          <div class="credit-card-note">All manga volumes, chapters, and related print publications are © <a
+              href="https://www.shogakukan.co.jp" target="_blank">Shogakukan Inc.</a>. All rights reserved.</div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-label">Anime Production</div>
+          <div class="credit-card-value">TMS Entertainment</div>
+          <div class="credit-card-note">All anime episodes, movies, and animated content are produced by and belong to
+            <a href="https://www.tms-e.co.jp" target="_blank">TMS Entertainment</a>. Aired on TV Asahi.
+          </div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-label">International Distribution</div>
+          <div class="credit-card-value">Funimation / Various</div>
+          <div class="credit-card-note">International distribution rights held by respective regional licensors. Please
+            support the official release in your region.</div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-label">Original Music Score</div>
+          <div class="credit-card-value">Katsuo Ohno</div>
+          <div class="credit-card-note">All original background music and the iconic Detective Conan theme are composed
+            by and belong to Katsuo Ohno. A legend in his own right.</div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-label">This Fan Site</div>
+          <div class="credit-card-value">DetCo News Hub</div>
+          <div class="credit-card-note">Fan-built news aggregator. No revenue generated. No copyrighted content hosted.
+            Built purely out of love for the series since 1994.</div>
+        </div>
+      </div>
+      <div class="footer-disclaimer-box">
+        <div class="disclaimer-icon">⚖️</div>
+        <div class="disclaimer-body">
+          <div class="disclaimer-heading">Legal Disclaimer</div>
+          <div class="disclaimer-text">
+            <strong>DetCo News Hub is an independent, non-commercial fan website.</strong> We are not affiliated with,
+            endorsed by, or connected to Gosho Aoyama, Shogakukan Inc., TMS Entertainment, TV Asahi, Funimation, or any
+            official Detective Conan rights holders. All Detective Conan characters, storylines, artwork, logos, and
+            related materials are the intellectual property of their respective owners. This site contains <strong>no
+              pirated content</strong>, hosts no manga scans, no episode streams, and generates no revenue. All news
+            content is editorial commentary and fan-created discussion. Images used are credited to their sources and
+            used solely for informational, non-commercial fan purposes under the spirit of fair use. If you are a rights
+            holder and have concerns, please contact us and we will respond promptly.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom-bar">
+      <div class="footer-bottom-left">
+        <span>© 2024 DetCo News Hub</span>
+        <span class="footer-sep">·</span>
+        <span>Detective Conan © <a href="https://www.shogakukan.co.jp" target="_blank">Gosho Aoyama /
+            Shogakukan</a></span>
+        <span class="footer-sep">·</span>
+        <span>Anime © <a href="https://www.tms-e.co.jp" target="_blank">TMS Entertainment / TV Asahi</a></span>
+      </div>
+      <div class="footer-bottom-right">
+        Built with <span class="footer-heart">♥</span> by fans &nbsp;·&nbsp; There is always only one truth
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX - 6 + 'px';
+      cursor.style.top = mouseY - 6 + 'px';
+    });
+    setInterval(() => {
+      ringX += (mouseX - ringX - 18) * 0.15;
+      ringY += (mouseY - ringY - 18) * 0.15;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+    }, 16);
+    document.querySelectorAll('a, button, .char-card, .case-file, .vol-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
+      el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // News modal
+    const openNews = document.getElementById('openNews');
+    const footerNews = document.getElementById('footerNews');
+    const closeNews = document.getElementById('closeNews');
+    const newsModal = document.getElementById('newsModal');
+    function openNewsModal(e) { e.preventDefault(); newsModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeNewsModal() { newsModal.classList.remove('open'); document.body.style.overflow = ''; }
+    openNews.addEventListener('click', openNewsModal);
+    if (footerNews) footerNews.addEventListener('click', openNewsModal);
+    closeNews.addEventListener('click', closeNewsModal);
+    newsModal.addEventListener('click', (e) => { if (e.target === newsModal) closeNewsModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNewsModal(); });
+    // News filters
+    document.querySelectorAll('.news-filter').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.news-filter').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.case-file').forEach(cf => {
+      cf.addEventListener('click', function () {
+        document.querySelectorAll('.case-file').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    // --- SUPABASE INTEGRATION ---
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    let supabaseClient;
+    try {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log("Supabase Client Init");
+    } catch (e) {
+      console.error("Supabase Init Error", e);
+    }
+
+    async function fetchData() {
+      if (!supabaseClient) return;
+
+      // Fetch Characters
+      const { data: chars, error: charErr } = await supabaseClient
+        .from('characters')
+        .select('*')
+        .order('name');
+
+      if (chars) renderCharacters(chars);
+      else console.error(charErr);
+
+      // Fetch News
+      const { data: news, error: newsErr } = await supabaseClient
+        .from('news')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (news) renderNews(news);
+      else console.error(newsErr);
+    }
+
+    function renderCharacters(chars) {
+      const container = document.getElementById('chars-grid-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      chars.forEach(c => {
+        const html = `
+            <div class="char-card reveal visible">
+                <img class="char-img" src="${c.image || 'https://i.imgur.com/placeholder.png'}" alt="${c.name}" onerror="this.src='https://i.imgur.com/placeholder.png'"/>
+                <div class="char-overlay"></div>
+                <div class="char-info">
+                    <div class="char-role">${c.faction || 'Main Cast'}</div>
+                    <div class="char-name">${c.name}</div>
+                    <div class="char-desc">${c.description}</div>
+                </div>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+    }
+
+    function renderNews(newsItems) {
+      const container = document.getElementById('news-grid-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      newsItems.forEach(n => {
+        const dateObj = new Date(n.created_at);
+        const day = dateObj.getDate();
+        const month = dateObj.toLocaleString('default', { month: 'short' }) + ' ' + dateObj.getFullYear();
+
+        const html = `
+            <div class="news-item">
+              <div class="news-date-block">
+                <div class="news-day">${day}</div>
+                <div class="news-month">${month}</div>
+              </div>
+              <div>
+                <div class="news-item-tag tag-manga" style="background:${getCategoryColor(n.category)}22; color:${getCategoryColor(n.category)}">${n.category}</div>
+                <div class="news-item-title">${n.title}</div>
+                <div class="news-item-excerpt">${n.content.substring(0, 120)}...</div>
+                <div class="news-item-meta"><span>${n.author}</span></div>
+              </div>
+            </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+    }
+
+    function getCategoryColor(cat) {
+      switch (cat) {
+        case 'BREAKING': return '#c0392b';
+        case 'MANGA': return '#c9a84c';
+        case 'ANIME': return '#4a90d9';
+        case 'MOVIE': return '#9b59b6';
+        default: return '#c9a84c';
+      }
+    }
+
+    // Load data
+    fetchData();
+
+  </script>
+</body>
+
+</html>
