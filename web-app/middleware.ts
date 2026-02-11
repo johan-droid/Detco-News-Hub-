@@ -42,18 +42,8 @@ export async function middleware(request: NextRequest) {
         });
     }
 
-    // Protect admin routes - require authentication
-    if (pathname.startsWith('/admin')) {
-        // Check for Supabase session cookie
-        const supabaseAuth = request.cookies.get('sb-access-token');
-
-        if (!supabaseAuth) {
-            // Redirect to home if not authenticated
-            const url = request.nextUrl.clone();
-            url.pathname = '/';
-            return NextResponse.redirect(url);
-        }
-    }
+    // Admin routes are protected by client-side authentication in the page component
+    // No middleware redirect needed as the page handles auth state properly
 
     // Add security headers to response
     const response = NextResponse.next();
