@@ -58,19 +58,8 @@ export async function middleware(request: NextRequest) {
     // Add security headers to response
     const response = NextResponse.next();
 
-    // Content Security Policy
-    const cspHeader = `
-        default-src 'self';
-        script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-        img-src 'self' data: https: blob:;
-        font-src 'self' https://fonts.gstatic.com;
-        connect-src 'self' https://*.supabase.co wss://*.supabase.co;
-        frame-ancestors 'none';
-        base-uri 'self';
-        form-action 'self';
-        upgrade-insecure-requests;
-    `.replace(/\\s{2,}/g, ' ').trim();
+    // Content Security Policy - simplified to avoid regex issues
+    const cspHeader = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'none'; base-uri 'self'; form-action 'self';";
 
     response.headers.set('Content-Security-Policy', cspHeader);
     response.headers.set('X-DNS-Prefetch-Control', 'on');
