@@ -18,7 +18,7 @@ type Post = {
     updated_at?: string;
 };
 
-const CATEGORIES = Object.freeze(["BREAKING", "MANGA", "ANIME", "THEORY", "EVENTS"] as const);
+const CATEGORIES = Object.freeze(["BREAKING", "MANGA", "ANIME", "THEORY", "EVENTS", "GENERAL"] as const);
 const INITIAL_FORM_STATE = Object.freeze({
     title: "" as string,
     content: "" as string,
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
         }
 
         // Sanitize inputs
-        const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS'];
+        const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS', 'GENERAL'];
         const sanitizedCategory = formData.category.toUpperCase().trim();
         
         if (!validCategories.includes(sanitizedCategory)) {
@@ -375,6 +375,7 @@ export default function AdminDashboard() {
                                     <option value="ANIME">ANIME</option>
                                     <option value="THEORY">THEORY</option>
                                     <option value="EVENTS">EVENTS</option>
+                                    <option value="GENERAL">GENERAL</option>
                                 </select>
                             </div>
                         </div>

@@ -119,9 +119,9 @@ export function validateContent(content: string): { valid: boolean; error?: stri
  * Validate category
  */
 export function validateCategory(category: string): { valid: boolean; error?: string } {
-    const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS'];
+    const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS', 'GENERAL'];
 
-    if (!validCategories.includes(category)) {
+    if (!validCategories.includes(category.toUpperCase())) {
         return { valid: false, error: 'Invalid category' };
     }
 

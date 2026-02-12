@@ -13,6 +13,7 @@ const categoryColors: Record<string, string> = {
     ANIME: "#27ae60", // green
     THEORY: "#4A90D9", // blue
     EVENTS: "#9B59B6", // purple
+    GENERAL: "#34495e", // dark gray
 };
 
 export default function News() {

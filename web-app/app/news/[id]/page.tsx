@@ -14,6 +14,7 @@ const categoryColors: Record<string, string> = Object.freeze({
     ANIME: "#27ae60",
     THEORY: "#4A90D9",
     EVENTS: "#9B59B6",
+    GENERAL: "#34495e",
 });
 
 export default function NewsDetail() {
