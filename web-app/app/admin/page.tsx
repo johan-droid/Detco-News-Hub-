@@ -177,8 +177,7 @@ export default function AdminDashboard() {
                     content: payload.content,
                     category: sanitizedCategory,
                     image: payload.image,
-                    author: payload.author,
-                    updated_at: new Date().toISOString()
+                    author: payload.author
                 })
                 .eq("id", editingId)
                 .select();
