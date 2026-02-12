@@ -128,6 +128,8 @@ export default function AdminDashboard() {
 
     const handleSave = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        console.log('Form data being saved:', formData);
 
         // Validate inputs
         const titleValidation = validateTitle(formData.title);
@@ -146,22 +148,43 @@ export default function AdminDashboard() {
         }
 
         // Sanitize inputs
+        const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS'];
+        const sanitizedCategory = formData.category.toUpperCase().trim();
+        
+        if (!validCategories.includes(sanitizedCategory)) {
+            return alert(`Invalid category: ${formData.category}. Must be one of: ${validCategories.join(', ')}`);
+        }
+
         const payload = {
             title: sanitizeInput(formData.title),
             content: sanitizeHTML(formData.content),
-            category: formData.category,
+            category: sanitizedCategory,
             image: sanitizeInput(formData.image),
             author: sanitizeInput(formData.author),
         };
+        
+        console.log('Sanitized payload:', payload);
 
         let error;
         if (editingId) {
             // Update existing post with updated_at timestamp
-            const { error: err } = await supabase
+            console.log('Updating post:', editingId, 'with payload:', payload);
+            
+            const { data, error: err } = await supabase
                 .from("news")
-                .update({ ...payload, updated_at: new Date().toISOString() })
-                .eq("id", editingId);
+                .update({ 
+                    title: payload.title,
+                    content: payload.content,
+                    category: sanitizedCategory,
+                    image: payload.image,
+                    author: payload.author,
+                    updated_at: new Date().toISOString()
+                })
+                .eq("id", editingId)
+                .select();
+                
             error = err;
+            console.log('Update response:', { data, error });
         } else {
             const { error: err } = await supabase
                 .from("news")
@@ -170,8 +193,10 @@ export default function AdminDashboard() {
         }
 
         if (error) {
-            alert("Error saving: " + error.message);
+            console.error('Detailed error:', error);
+            alert("Error saving: " + error.message + (error.details ? " - " + error.details : ""));
         } else {
+            console.log('Save successful');
             resetForm();
             fetchPosts();
         }
