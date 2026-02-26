@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next();
 
     // Content Security Policy - simplified to avoid regex issues
-    const cspHeader = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live; frame-src 'self' https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self';";
+    const cspHeader = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com https://vercel.live; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live; frame-src 'self' https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self';";
 
     response.headers.set('Content-Security-Policy', cspHeader);
     response.headers.set('X-DNS-Prefetch-Control', 'on');
