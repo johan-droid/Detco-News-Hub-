@@ -138,8 +138,8 @@ export default function Characters() {
                                             <div className="flex justify-between items-start mb-2">
                                                 <div
                                                     className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl border border-white/10 bg-black/20 backdrop-blur-sm shadow-lg"
-                                                    style={{ 
-                                                        color: color, 
+                                                    style={{
+                                                        color: color,
                                                         borderColor: color,
                                                         background: `linear-gradient(135deg, ${color}20 0%, ${color}10 100%)`
                                                     }}
@@ -215,8 +215,8 @@ export default function Characters() {
                                         <div className="flex justify-between items-start mb-2">
                                             <div
                                                 className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl border border-white/10 bg-black/20 backdrop-blur-sm shadow-lg"
-                                                style={{ 
-                                                    color: color, 
+                                                style={{
+                                                    color: color,
                                                     borderColor: color,
                                                     background: `linear-gradient(135deg, ${color}20 0%, ${color}10 100%)`
                                                 }}
@@ -319,12 +319,12 @@ export default function Characters() {
                                         </div>
                                     </div>
                                 )}
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
             )}
-        </div>
-        <DataStatus usingFallback={usingFallback} error={error} />
-    </section>
-);
+            <DataStatus usingFallback={usingFallback} error={error} />
+        </section>
+    );
 }
