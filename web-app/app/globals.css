@@ -1,20 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  /* Theme Colors */
+  /* Enhanced Theme Colors with Better Gradients */
   --ink: #0a0a0f;
   --deep: #0f0f1a;
   --coal: #161622;
   --card: #1a1a2e;
   --border: #2a2a45;
+  
+  /* Enhanced Gold Gradient Colors */
   --gold: #c9a84c;
   --gold-light: #e8c96e;
   --gold-dim: rgba(201, 168, 76, 0.15);
+  --gold-glow: rgba(201, 168, 76, 0.3);
+  --gold-shimmer: linear-gradient(135deg, #c9a84c 0%, #e8c96e 50%, #d4b25c 100%);
+  
+  /* Enhanced Red Gradient Colors */
   --red: #c0392b;
-  --red-glow: rgba(192, 57, 43, 0.2);
+  --red-light: #e74c3c;
+  --red-glow: rgba(192, 57, 43, 0.3);
+  --red-gradient: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+  
+  /* Enhanced Accent Blue Gradient */
+  --accent: #4a90d9;
+  --accent-light: #5ba0e9;
+  --accent-glow: rgba(74, 144, 217, 0.3);
+  --accent-gradient: linear-gradient(135deg, #4a90d9 0%, #5ba0e9 100%);
+  
+  /* Enhanced Purple for secondary accents */
+  --purple: #9b59b6;
+  --purple-light: #a569bd;
+  --purple-glow: rgba(155, 89, 182, 0.3);
+  --purple-gradient: linear-gradient(135deg, #9b59b6 0%, #a569bd 100%);
+  
+  /* Enhanced Text Colors */
   --white: #f4f0e8;
   --muted: #8a8a9a;
-  --accent: #4a90d9;
+  --muted-light: #9a9aaa;
 
   --background: var(--ink);
   --foreground: var(--white);
@@ -31,15 +53,16 @@ body {
   color: var(--white);
   font-family: var(--font-body);
   overflow-x: hidden;
-  /* cursor: none; */
+  /* Enhanced background with subtle gradient */
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(74, 144, 217, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(155, 89, 182, 0.03) 0%, transparent 50%);
 }
 
-/* Removed heavy SVG noise filter to improve scroll performance */
-
-
-/* SCROLLBAR */
+/* Enhanced Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -47,20 +70,42 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gold);
-  border-radius: 3px;
+  background: var(--gold-gradient);
+  border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
-/* UTILITIES */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-light);
+}
+
+/* Enhanced Utilities */
 .text-gold {
   color: var(--gold);
+  text-shadow: 0 0 10px rgba(201, 168, 76, 0.3);
 }
 
 .text-muted {
   color: var(--muted);
 }
 
-/* MOBILE OPTIMIZATIONS */
+.bg-gold-gradient {
+  background: var(--gold-shimmer);
+}
+
+.bg-red-gradient {
+  background: var(--red-gradient);
+}
+
+.bg-accent-gradient {
+  background: var(--accent-gradient);
+}
+
+.bg-purple-gradient {
+  background: var(--purple-gradient);
+}
+
+/* Enhanced Mobile Optimizations */
 @media (max-width: 768px) {
 
   /* Improve touch scrolling */
@@ -85,31 +130,116 @@ body {
     padding-right: env(safe-area-inset-right);
   }
 
-  /* Ensure text colors are visible on mobile */
+  /* Enhanced mobile text visibility */
   .text-muted {
-    color: var(--white) !important;
-    opacity: 0.9;
+    color: var(--muted-light) !important;
+    opacity: 1;
   }
 
-  /* Fix any transparent text issues */
-  a,
-  button,
-  span,
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Mobile-specific font smoothing */
+  * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Enhanced mobile gradients */
+  .mobile-gradient-bg {
+    background: 
+      linear-gradient(135deg, rgba(201, 168, 76, 0.1) 0%, transparent 60%),
+      linear-gradient(225deg, rgba(74, 144, 217, 0.1) 0%, transparent 60%);
+  }
+
+  /* Mobile touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile text sizing */
+  h1 { font-size: clamp(2rem, 8vw, 4rem); }
+  h2 { font-size: clamp(1.5rem, 6vw, 3rem); }
+  h3 { font-size: clamp(1.25rem, 5vw, 2rem); }
+  
+  /* Mobile spacing */
+  .section-mobile {
+    padding: 3rem 1rem;
+  }
+  
+  .container-mobile {
+    padding: 0 1rem;
+  }
 }
 
-/* Touch-friendly interactions */
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-muted {
+    color: var(--muted-light);
+  }
+  
+  /* Tablet-specific adjustments */
+  .section-tablet {
+    padding: 4rem 2rem;
+  }
+}
+
+/* Enhanced touch-friendly interactions */
 button,
 a,
 [role="button"] {
   touch-action: manipulation;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced hover states */
+button:hover,
+a:hover,
+[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+/* Enhanced focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Enhanced loading animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Enhanced glassmorphism effects */
+.glass {
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-gold {
+  background: rgba(201, 168, 76, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+/* Responsive grid helpers */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .grid-responsive {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }

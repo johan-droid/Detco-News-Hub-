@@ -25,21 +25,21 @@ export default function Hero() {
             id="home"
             className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 md:px-8 pt-20 md:pt-24 pb-12"
         >
-            {/* Background Grid */}
+            {/* Background Grid - Enhanced for mobile */}
             <div
                 className="absolute inset-0 z-0 opacity-20 pointer-events-none"
                 style={{
-                    backgroundImage: `linear-gradient(rgba(224,201,122,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(224,201,122,0.1) 1px, transparent 1px)`,
-                    backgroundSize: "60px 60px"
+                    backgroundImage: `linear-gradient(rgba(224,201,122,0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(224,201,122,0.15) 1px, transparent 1px)`,
+                    backgroundSize: "40px 40px"
                 }}
             />
 
-            {/* Background Orbs - Optimized for mobile */}
+            {/* Enhanced Background Orbs - Mobile Optimized */}
             <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-accent/20 blur-[60px] md:blur-[100px]" />
-                <div className="absolute bottom-[-5%] left-[-5%] w-[250px] md:w-[400px] h-[250px] md:h-[400px] rounded-full bg-gold/15 blur-[60px] md:blur-[100px]" />
-                <div className="absolute top-[40%] left-[40%] w-[200px] md:w-[300px] h-[200px] md:h-[300px] rounded-full bg-purple-500/10 blur-[50px] md:blur-[80px]" />
+                <div className="absolute top-[-10%] right-[-5%] w-[200px] sm:w-[300px] md:w-[500px] h-[200px] sm:h-[300px] md:h-[500px] rounded-full bg-gradient-to-br from-accent/20 to-accent/10 blur-[40px] sm:blur-[60px] md:blur-[100px]" />
+                <div className="absolute bottom-[-5%] left-[-5%] w-[150px] sm:w-[250px] md:w-[400px] h-[150px] sm:h-[250px] md:h-[400px] rounded-full bg-gradient-to-tr from-gold/20 to-gold/10 blur-[40px] sm:blur-[60px] md:blur-[100px]" />
+                <div className="absolute top-[40%] left-[40%] w-[120px] sm:w-[200px] md:w-[300px] h-[120px] sm:h-[200px] md:h-[300px] rounded-full bg-gradient-to-br from-purple/15 to-purple/5 blur-[30px] sm:blur-[50px] md:blur-[80px]" />
             </div>
 
             <div className="relative z-10 max-w-4xl w-full grid md:grid-cols-2 gap-8 md:gap-12 items-center">
@@ -58,10 +58,10 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.1 }}
-                        className="font-display font-black text-4xl sm:text-6xl md:text-8xl leading-[0.9] tracking-tight text-white drop-shadow-lg"
+                        className="font-display font-black text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] tracking-tight text-white drop-shadow-lg"
                     >
                         <span className="block">DETECTIVE</span>
-                        <span className="block text-gold italic tracking-wide">CONAN</span>
+                        <span className="block text-gold italic tracking-wide bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent">CONAN</span>
                     </motion.h1>
 
                     <motion.div
@@ -83,10 +83,10 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.6 }}
                         className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 pt-2 md:pt-4"
                     >
-                        <a href="#about" className="bg-gold text-ink font-mono text-xs md:text-sm tracking-widest font-bold py-3.5 px-6 md:py-4 md:px-8 uppercase hover:bg-gold-light transition-transform hover:-translate-y-1 polygon-clip text-center min-h-[44px] flex items-center justify-center">
+                        <a href="#about" className="bg-gradient-to-r from-gold to-gold-light text-ink font-mono text-xs md:text-sm tracking-widest font-bold py-3.5 px-6 md:py-4 md:px-8 uppercase hover:from-gold-light hover:to-gold transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-gold/30 text-center min-h-[44px] flex items-center justify-center">
                             Start Investigating
                         </a>
-                        <a href="#news" className="flex items-center justify-center sm:justify-start gap-2 text-muted hover:text-white font-mono text-xs md:text-sm tracking-widest uppercase transition-colors group min-h-[44px]">
+                        <a href="#news" className="flex items-center justify-center sm:justify-start gap-2 text-muted hover:text-white font-mono text-xs md:text-sm tracking-widest uppercase transition-all group min-h-[44px]">
                             Latest News <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </a>
                     </motion.div>

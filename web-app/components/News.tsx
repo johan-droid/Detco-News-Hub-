@@ -7,13 +7,37 @@ import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 import type { NewsItem } from "@/types";
 
-const categoryColors: Record<string, string> = {
-    BREAKING: "#c0392b", // red
-    MANGA: "#c9a84c", // gold
-    ANIME: "#27ae60", // green
-    THEORY: "#4A90D9", // blue
-    EVENTS: "#9B59B6", // purple
-    GENERAL: "#34495e", // dark gray
+const categoryColors: Record<string, { main: string; light: string; gradient: string }> = {
+    BREAKING: { 
+        main: "#c0392b", 
+        light: "#e74c3c", 
+        gradient: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)"
+    },
+    MANGA: { 
+        main: "#c9a84c", 
+        light: "#e8c96e", 
+        gradient: "linear-gradient(135deg, #c9a84c 0%, #e8c96e 100%)"
+    },
+    ANIME: { 
+        main: "#27ae60", 
+        light: "#2ecc71", 
+        gradient: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)"
+    },
+    THEORY: { 
+        main: "#4A90D9", 
+        light: "#5ba0e9", 
+        gradient: "linear-gradient(135deg, #4A90D9 0%, #5ba0e9 100%)"
+    },
+    EVENTS: { 
+        main: "#9B59B6", 
+        light: "#a569bd", 
+        gradient: "linear-gradient(135deg, #9B59B6 0%, #a569bd 100%)"
+    },
+    GENERAL: { 
+        main: "#34495e", 
+        light: "#4a5f7e", 
+        gradient: "linear-gradient(135deg, #34495e 0%, #4a5f7e 100%)"
+    },
 };
 
 export default function News() {
@@ -83,7 +107,7 @@ export default function News() {
                 ) : (
                     <div className="grid md:grid-cols-2 gap-6 md:gap-8">
                         {newsItems.map((n: NewsItem, i: number) => {
-                            const color = categoryColors[n.category] || "#c9a84c";
+                            const colors = categoryColors[n.category] || categoryColors.GENERAL;
                             return (
                                 <motion.div
                                     key={n.id}
@@ -91,7 +115,7 @@ export default function News() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    className="bg-card border border-white/5 p-5 md:p-8 group hover:border-gold/30 transition-all flex flex-col h-full relative overflow-hidden"
+                                    className="bg-card/60 border border-white/5 p-5 md:p-8 group hover:border-gold/30 transition-all flex flex-col h-full relative overflow-hidden backdrop-blur-sm"
                                 >
                                     <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                         <FileText size={100} />
@@ -101,9 +125,9 @@ export default function News() {
                                         <span
                                             className="font-mono text-[9px] md:text-[10px] px-2.5 md:px-3 py-1 border uppercase tracking-widest"
                                             style={{
-                                                color: color,
-                                                borderColor: `${color}44`,
-                                                backgroundColor: `${color}11`
+                                                background: colors.gradient,
+                                                borderColor: `${colors.main}44`,
+                                                color: colors.light
                                             }}
                                         >
                                             {n.category}
@@ -124,7 +148,7 @@ export default function News() {
                                     <Link
                                         href={`/news/${n.id}`}
                                         className="relative z-10 inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-all group-hover:gap-3 py-2.5 md:py-2 border-b border-transparent hover:border-current self-start min-h-[44px] md:min-h-0"
-                                        style={{ color: color }}
+                                        style={{ color: colors.main }}
                                     >
                                         Read Case File <ArrowRight size={14} />
                                     </Link>

@@ -204,3 +204,518 @@ generated-types/
 
 # Lighthouse reports
 lighthouse-reports/
+
+# ============================================
+# MODERN DEVELOPMENT TOOLS
+# ============================================
+# Vite (if used)
+.vite/
+
+# Webpack (if used)
+.webpack/
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Stylelint cache
+.stylelintcache
+
+# ============================================
+# AI & DEVELOPMENT ASSISTANTS
+# ============================================
+# Cursor AI files
+.cursor/
+
+# GitHub Copilot
+.copilot/
+
+# Claude Desktop
+.claude/
+
+# ============================================
+# DOCKER & CONTAINERIZATION
+# ============================================
+# Docker files
+.dockerignore
+docker-compose.override.yml
+
+# Container volumes
+volumes/
+
+# ============================================
+# MONITORING & OBSERVABILITY
+# ============================================
+# Sentry
+.sentryclirc
+
+# Datadog
+.ddrc
+
+# New Relic
+.newrelic/
+
+# ============================================
+# CMS & CONTENT MANAGEMENT
+# ============================================
+# Contentful
+.contentfulrc.json
+
+# Strapi
+.strapi/
+
+# Sanity
+.sanity/
+
+# ============================================
+# DESIGN & ASSETS
+# ============================================
+# Figma exports
+figma-export/
+
+# Adobe Creative Cloud
+.adobe/
+
+# Sketch files
+*.sketch
+
+# ============================================
+# LOCAL DEVELOPMENT ENVIRONMENTS
+# ============================================
+# Local database files
+local-db/
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+
+# Local SSL certificates
+ssl/
+localhost.pem
+localhost-key.pem
+
+# Local server configurations
+nginx.local.conf
+apache.local.conf
+
+# ============================================
+# BACKUP & VERSION CONTROL
+# ============================================
+# Git merge conflict files
+*.orig
+*.rej
+
+# Patch files
+*.patch
+
+# Diff files
+*.diff
+
+# ============================================
+# EXPERIMENTAL & BETA FEATURES
+# ============================================
+# Next.js experimental features
+.next-experimental/
+
+# Turbopack cache
+.turbo/
+
+# ============================================
+# SECURITY SCANS & AUDITS
+# ============================================
+# OWASP ZAP reports
+zap-report/
+
+# Snyk reports
+.snyk/
+
+# Nessus reports
+*.nessus
+
+# ============================================
+# API TESTING & MOCKING
+# ============================================
+# Postman collections
+postman-collection.json
+
+# Insomnia collections
+insomnia.json
+
+# Mock server data
+mock-data/
+mock-api/
+
+# ============================================
+# CI/CD PIPELINES
+# ============================================
+# GitHub Actions cache
+.github/cache/
+
+# GitLab CI cache
+.gitlab-ci/cache/
+
+# CircleCI cache
+.circleci/cache/
+
+# ============================================
+# BROWSER EXTENSIONS & DEVTOOLS
+# ============================================
+# Chrome extensions
+chrome-extension/
+
+# Firefox extensions
+firefox-extension/
+
+# ============================================
+# LOCALIZATION & INTERNATIONALIZATION
+# ============================================
+# Translation files (working copies)
+translations/work/
+
+# i18n build cache
+.i18n-cache/
+
+# ============================================
+# BLOCKCHAIN & WEB3
+# ============================================
+# Ethereum contracts
+artifacts/
+cache/
+typechain/
+
+# Hardhat files
+.hardhat/
+
+# Truffle files
+build/contracts/
+
+# ============================================
+# MACHINE LEARNING & AI MODELS
+# ============================================
+# Model files
+*.model
+*.pkl
+*.h5
+*.onnx
+
+# Training data
+training-data/
+datasets/
+
+# ============================================
+# AUDIO & VIDEO PROCESSING
+# ============================================
+# Audio files (development)
+*.wav
+*.mp3
+*.flac
+dev-audio/
+
+# Video files (development)
+*.mp4
+*.avi
+*.mov
+dev-video/
+
+# ============================================
+# 3D MODELING & CAD
+# ============================================
+# 3D model files
+*.obj
+*.fbx
+*.dae
+*.blend
+
+# CAD files
+*.dwg
+*.dxf
+*.step
+
+# ============================================
+# GAMING & INTERACTIVE CONTENT
+# ============================================
+# Unity files
+UnityProject/
+Library/
+Temp/
+Obj/
+
+# Unreal Engine files
+*.uproject
+DerivedDataCache/
+Intermediate/
+
+# ============================================
+# DOCUMENTATION GENERATION
+# ============================================
+# JSDoc
+jsdoc-out/
+
+# TypeDoc
+typedoc-out/
+
+# Sphinx documentation
+docs/_build/
+
+# ============================================
+# PACKAGE REGISTRY & PUBLISHING
+# ============================================
+# npm publish cache
+.npm/
+
+# yarn publish cache
+.yarn/
+
+# pnpm publish cache
+.pnpm/
+
+# ============================================
+# CLOUD STORAGE & CDN
+# ============================================
+# AWS S3 sync files
+.aws-s3-sync/
+
+# Cloudflare cache
+.cloudflare/
+
+# Firebase cache
+.firebase/
+
+# ============================================
+# ANALYTICS & TRACKING
+# ============================================
+# Google Analytics
+analytics.json
+
+# Segment
+segment-config.json
+
+# Mixpanel
+mixpanel-config.json
+
+# ============================================
+# EMAIL & COMMUNICATION
+# ============================================
+# Email templates (working)
+email-templates/work/
+
+# Mailgun logs
+mailgun-logs/
+
+# SendGrid logs
+sendgrid-logs/
+
+# ============================================
+# SEARCH & INDEXING
+# ============================================
+# Elasticsearch data
+elasticsearch-data/
+
+# Algolia indices
+algolia-indices/
+
+# ============================================
+# PAYMENT PROCESSING
+# ============================================
+# Stripe test data
+stripe-test-data/
+
+# PayPal sandbox logs
+paypal-sandbox-logs/
+
+# ============================================
+# SOCIAL MEDIA INTEGRATION
+# ============================================
+# Twitter API keys (local)
+twitter-config.local.json
+
+# Facebook API keys (local)
+facebook-config.local.json
+
+# Instagram API keys (local)
+instagram-config.local.json
+
+# ============================================
+# DEVELOPMENT SERVERS & PROXIES
+# ============================================
+# Local proxy configurations
+proxy.local.conf
+
+# Development server logs
+dev-server-logs/
+
+# Hot reload cache
+.hmr-cache/
+
+# ============================================
+# BUNDLING & OPTIMIZATION
+# ============================================
+# Webpack bundle analyzer
+webpack-bundle-analyzer-report.html
+
+# Rollup analysis
+rollup-analysis/
+
+# Parcel analysis
+parcel-analysis/
+
+# ============================================
+# TESTING & QUALITY ASSURANCE
+# ============================================
+# Cypress videos
+cypress/videos/
+
+# Cypress screenshots
+cypress/screenshots/
+
+# Playwright reports
+playwright-report/
+
+# Jest coverage
+coverage/
+
+# ============================================
+# DEPLOYMENT CONFIGURATIONS
+# ============================================
+# Terraform state
+terraform.tfstate
+*.tfstate.backup
+
+# Ansible inventory
+ansible/inventory/
+
+# Kubernetes secrets
+k8s/secrets/
+
+# ============================================
+# MONITORING DASHBOARDS
+# ============================================
+# Grafana dashboards
+grafana/dashboards/
+
+# Prometheus data
+prometheus-data/
+
+# ============================================
+# LOGGING & DEBUGGING
+# ============================================
+# Debug logs
+debug.log
+trace.log
+
+# Crash reports
+crash-reports/
+
+# Memory dumps
+*.dmp
+*.core
+
+# ============================================
+# PERFORMANCE PROFILING
+# ============================================
+# Chrome profiling
+chrome-profile.json
+
+# Node.js profiling
+node-profile.json
+
+# ============================================
+# SECURITY & COMPLIANCE
+# ============================================
+# Security scan results
+security-scan-results/
+
+# Compliance reports
+compliance-reports/
+
+# Audit logs
+audit.log
+
+# ============================================
+# BACKUP & RECOVERY
+# ============================================
+# Database backups
+db-backups/
+*.sql.backup
+
+# File backups
+file-backups/
+
+# System backups
+system-backups/
+
+# ============================================
+# DEVELOPMENT UTILITIES
+# ============================================
+# Temporary scripts
+temp-scripts/
+tmp-scripts/
+
+# Development utilities
+dev-utils/
+
+# Build utilities
+build-utils/
+
+# ============================================
+# EXPERIMENTAL FEATURES
+# ============================================
+# Feature flags (local)
+feature-flags.local.json
+
+# A/B testing data
+ab-testing-data/
+
+# Canary deployments
+canary/
+
+# ============================================
+# LEGACY & DEPRECATED
+# ============================================
+# Old build systems
+old-build/
+
+# Deprecated configurations
+deprecated/
+
+# Legacy code
+legacy/
+
+# ============================================
+# MISCELLANEOUS
+# ============================================
+# Random temporary files
+*.temp
+*.tmp
+*.bak
+*.old
+*.orig
+*.rej
+
+# System files
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Lock files (optional - uncomment if needed)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Editor backup files
+*~
+.#*
+\#*#
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

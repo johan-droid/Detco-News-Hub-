@@ -80,6 +80,7 @@ export default function Characters() {
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                         {characters.map((c, i) => {
                             const color = c.color || "#c9a84c";
+                            const colorGradient = `linear-gradient(135deg, ${color} 0%, ${color}dd 100%)`;
                             return (
                                 <motion.div
                                     key={c.id}
@@ -88,20 +89,20 @@ export default function Characters() {
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    whileHover={{ y: -5 }} // Removed scale to prevent jitter
+                                    whileHover={{ y: -5 }}
                                     transition={{ duration: 0.3, delay: i * 0.05 }}
-                                    className="bg-card/60 border border-white/5 p-4 md:p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[280px] md:h-[300px] flex flex-col justify-end transition-colors hover:border-gold/30" // Removed backdrop-blur-md
+                                    className="bg-card/60 border border-white/5 p-4 md:p-6 rounded-xl relative group overflow-hidden cursor-pointer h-[280px] md:h-[300px] flex flex-col justify-end transition-all hover:border-gold/30 backdrop-blur-sm"
                                     style={{ borderColor: `${color}33` }}
                                 >
-                                    {/* Background Gradient & Glow */}
+                                    {/* Enhanced Background Gradient & Glow */}
                                     <div
-                                        className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700"
-                                        style={{ background: `linear-gradient(to top, ${color}, transparent)` }}
+                                        className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-all duration-700"
+                                        style={{ background: colorGradient }}
                                     />
 
                                     {/* Large Artistic Emoji/Icon Background */}
                                     <div
-                                        className="absolute -top-4 -right-4 text-[150px] opacity-5 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700 select-none grayscale group-hover:grayscale-0 rotate-12"
+                                        className="absolute -top-4 -right-4 text-[120px] sm:text-[150px] opacity-5 group-hover:opacity-20 group-hover:scale-110 transition-all duration-700 select-none grayscale group-hover:grayscale-0 rotate-12"
                                         style={{ filter: 'blur(2px)' }}
                                     >
                                         {c.emoji || "👤"}
@@ -112,7 +113,11 @@ export default function Characters() {
                                         <div className="flex justify-between items-start mb-2">
                                             <div
                                                 className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl border border-white/10 bg-black/20 backdrop-blur-sm shadow-lg"
-                                                style={{ color: color, borderColor: color }}
+                                                style={{ 
+                                                    color: color, 
+                                                    borderColor: color,
+                                                    background: `linear-gradient(135deg, ${color}20 0%, ${color}10 100%)`
+                                                }}
                                             >
                                                 {c.emoji || "👤"}
                                             </div>
@@ -126,19 +131,19 @@ export default function Characters() {
                                             )}
                                         </div>
 
-                                        <h3 className="font-display font-bold text-xl md:text-2xl mb-1 text-white group-hover:text-gold transition-colors">
+                                        <h3 className="font-display font-bold text-lg sm:text-xl md:text-2xl mb-1 text-white group-hover:text-gold transition-colors">
                                             {c.name}
                                         </h3>
 
                                         {c.role && (
-                                            <p className="font-mono text-[10px] md:text-xs text-muted mb-2 md:mb-3 uppercase tracking-widest">{c.role}</p>
+                                            <p className="font-mono text-[9px] md:text-xs text-muted mb-2 md:mb-3 uppercase tracking-widest">{c.role}</p>
                                         )}
 
                                         <p className="text-xs md:text-sm text-muted/80 line-clamp-2 mb-3 md:mb-4 group-hover:text-white/90 transition-colors">
                                             {c.description}
                                         </p>
 
-                                        <div className="flex items-center gap-2 text-gold text-[10px] md:text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                                        <div className="flex items-center gap-2 text-gold text-[9px] md:text-xs font-mono uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
                                             <span>Access File</span>
                                             <span className="group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
