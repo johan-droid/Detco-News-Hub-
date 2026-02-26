@@ -58,9 +58,24 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Netlify
+.netlify
+
+# Render
+.render.yaml
+
+# Railway
+railway.json
+
+# ============================================
+# TYPESCRIPT & BUILD FILES
+# ============================================
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Tailwind CSS
+.tailwind-cache/
 
 # ============================================
 # IDE & EDITOR FILES
@@ -74,12 +89,36 @@ next-env.d.ts
 .classpath
 .settings/
 
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
 # ============================================
 # OS FILES
 # ============================================
 .DS_Store
 Thumbs.db
 desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
 
 # ============================================
 # SECURITY & SENSITIVE DATA
@@ -98,3 +137,70 @@ desktop.ini
 # Logs that might contain sensitive data
 logs/
 *.log
+
+# ============================================
+# TEST & DEVELOPMENT FILES
+# ============================================
+# Test files and coverage
+coverage/
+.nyc_output/
+junit.xml
+test-results/
+
+# Storybook
+storybook-static/
+
+# ============================================
+# TEMPORARY & CACHE FILES
+# ============================================
+# Temporary files
+*.tmp
+*.temp
+temp/
+.tmp/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+
+# ============================================
+# PACKAGE MANAGER LOCK FILES (optional)
+# ============================================
+# Some teams prefer to ignore lock files for libraries
+# Uncomment if needed:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================
+# CUSTOM PROJECT SPECIFIC
+# ============================================
+# Test database connection script
+test-db-connection.js
+
+# Local development scripts
+scripts/local-*.js
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# ============================================
+# GENERATED FILES
+# ============================================
+# Generated documentation
+docs/build/
+
+# Generated types
+generated-types/
+
+# ============================================
+# PERFORMANCE & ANALYTICS
+# ============================================
+# Bundle analyzer
+.bundle-analyzer/
+
+# Lighthouse reports
+lighthouse-reports/

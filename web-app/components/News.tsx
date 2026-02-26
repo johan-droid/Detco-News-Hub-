@@ -22,19 +22,28 @@ export default function News() {
 
     useEffect(() => {
         const fetchNews = async () => {
-            const { data, error } = await supabase
-                .from("news")
-                .select("*")
-                .order("created_at", { ascending: false })
-                .limit(4);
+            try {
+                const { data, error } = await supabase
+                    .from("news")
+                    .select("*")
+                    .order("created_at", { ascending: false })
+                    .limit(4);
 
-            if (data) {
-                setNewsItems(data);
+                if (data) {
+                    setNewsItems(data);
+                }
+                if (error) {
+                    console.error("Error fetching news:", error);
+                    // Show network error to user
+                    if (error.message?.includes('fetch failed') || error.message?.includes('timeout')) {
+                        console.error("Network connection issue - check internet connection");
+                    }
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            } finally {
+                setLoading(false);
             }
-            if (error) {
-                console.error("Error fetching news:", error);
-            }
-            setLoading(false);
         };
 
         fetchNews();

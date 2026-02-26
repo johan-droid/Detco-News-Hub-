@@ -12,18 +12,27 @@ export default function Characters() {
 
     useEffect(() => {
         const fetchCharacters = async () => {
-            const { data, error } = await supabase
-                .from("characters")
-                .select("*")
-                .order("created_at", { ascending: true });
+            try {
+                const { data, error } = await supabase
+                    .from("characters")
+                    .select("*")
+                    .order("created_at", { ascending: true });
 
-            if (data) {
-                setCharacters(data);
+                if (data) {
+                    setCharacters(data);
+                }
+                if (error) {
+                    console.error("Error fetching characters:", error);
+                    // Show network error to user
+                    if (error.message?.includes('fetch failed') || error.message?.includes('timeout')) {
+                        console.error("Network connection issue - check internet connection");
+                    }
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+            } finally {
+                setLoading(false);
             }
-            if (error) {
-                console.error("Error fetching characters:", error);
-            }
-            setLoading(false);
         };
 
         fetchCharacters();
