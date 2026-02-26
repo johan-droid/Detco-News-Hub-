@@ -992,3 +992,7 @@ logs/local/
 # Debug files local
 debug.local.*
 trace.local.*
+
+# Security additions
+scripts/create-admin.js
+scripts/seed-characters.js

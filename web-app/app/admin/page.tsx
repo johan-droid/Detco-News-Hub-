@@ -55,7 +55,12 @@ export default function AdminDashboard() {
         e.preventDefault();
         setLoginError("");
 
-        const email = "admin@detco-internal.com";
+        const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+        if (!email) {
+            setLoginError("Server configuration error: Admin email not set");
+            return;
+        }
+
         const { error } = await supabase.auth.signInWithPassword({
             email,
             password: loginSecret,
@@ -128,7 +133,7 @@ export default function AdminDashboard() {
 
     const handleSave = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         console.log('Form data being saved:', formData);
 
         // Validate inputs
@@ -150,7 +155,7 @@ export default function AdminDashboard() {
         // Sanitize inputs
         const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS', 'GENERAL'];
         const sanitizedCategory = formData.category.toUpperCase().trim();
-        
+
         if (!validCategories.includes(sanitizedCategory)) {
             return alert(`Invalid category: ${formData.category}. Must be one of: ${validCategories.join(', ')}`);
         }
@@ -162,17 +167,17 @@ export default function AdminDashboard() {
             image: sanitizeInput(formData.image),
             author: sanitizeInput(formData.author),
         };
-        
+
         console.log('Sanitized payload:', payload);
 
         let error;
         if (editingId) {
             // Update existing post with updated_at timestamp
             console.log('Updating post:', editingId, 'with payload:', payload);
-            
+
             const { data, error: err } = await supabase
                 .from("news")
-                .update({ 
+                .update({
                     title: payload.title,
                     content: payload.content,
                     category: sanitizedCategory,
@@ -181,7 +186,7 @@ export default function AdminDashboard() {
                 })
                 .eq("id", editingId)
                 .select();
-                
+
             error = err;
             console.log('Update response:', { data, error });
         } else {
