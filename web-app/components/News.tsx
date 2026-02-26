@@ -3,41 +3,41 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, FileText, AlertTriangle } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+// Removed supabase import
 import { fallbackNews } from "@/lib/fallbackData";
 import DataStatus from "@/components/DataStatus";
 import Link from "next/link";
 import type { NewsItem } from "@/types";
 
 const categoryColors: Record<string, { main: string; light: string; gradient: string }> = {
-    BREAKING: { 
-        main: "#c0392b", 
-        light: "#e74c3c", 
+    BREAKING: {
+        main: "#c0392b",
+        light: "#e74c3c",
         gradient: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)"
     },
-    MANGA: { 
-        main: "#c9a84c", 
-        light: "#e8c96e", 
+    MANGA: {
+        main: "#c9a84c",
+        light: "#e8c96e",
         gradient: "linear-gradient(135deg, #c9a84c 0%, #e8c96e 100%)"
     },
-    ANIME: { 
-        main: "#27ae60", 
-        light: "#2ecc71", 
+    ANIME: {
+        main: "#27ae60",
+        light: "#2ecc71",
         gradient: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)"
     },
-    THEORY: { 
-        main: "#4A90D9", 
-        light: "#5ba0e9", 
+    THEORY: {
+        main: "#4A90D9",
+        light: "#5ba0e9",
         gradient: "linear-gradient(135deg, #4A90D9 0%, #5ba0e9 100%)"
     },
-    EVENTS: { 
-        main: "#9B59B6", 
-        light: "#a569bd", 
+    EVENTS: {
+        main: "#9B59B6",
+        light: "#a569bd",
         gradient: "linear-gradient(135deg, #9B59B6 0%, #a569bd 100%)"
     },
-    GENERAL: { 
-        main: "#34495e", 
-        light: "#4a5f7e", 
+    GENERAL: {
+        main: "#34495e",
+        light: "#4a5f7e",
         gradient: "linear-gradient(135deg, #34495e 0%, #4a5f7e 100%)"
     },
 };
@@ -51,11 +51,13 @@ export default function News() {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const { data, error } = await supabase
-                    .from("news")
-                    .select("*")
-                    .order("created_at", { ascending: false })
-                    .limit(4);
+                const response = await fetch('/api/news');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const { data, error } = await response.json();
 
                 if (data && data.length > 0) {
                     setNewsItems(data);
@@ -70,13 +72,9 @@ export default function News() {
                 }
                 if (error) {
                     console.error("Error fetching news:", error);
-                    // Show network error to user
-                    if (error.message?.includes('fetch failed') || error.message?.includes('timeout')) {
-                        console.error("Network connection issue - using fallback data");
-                        setNewsItems(fallbackNews);
-                        setUsingFallback(true);
-                        setError("Network connection issue - showing sample data");
-                    }
+                    setNewsItems(fallbackNews);
+                    setUsingFallback(true);
+                    setError("Database error - showing sample data");
                 }
             } catch (err) {
                 console.error("Unexpected error:", err);

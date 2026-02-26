@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+// Removed supabase import
 import { fallbackCharacters } from "@/lib/fallbackData";
 import DataStatus from "@/components/DataStatus";
 import type { CharacterItem } from "@/types";
@@ -18,10 +18,13 @@ export default function Characters() {
     useEffect(() => {
         const fetchCharacters = async () => {
             try {
-                const { data, error } = await supabase
-                    .from("characters")
-                    .select("*")
-                    .order("created_at", { ascending: true });
+                const response = await fetch('/api/characters');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const { data, error } = await response.json();
 
                 if (data && data.length > 0) {
                     setCharacters(data);
@@ -36,13 +39,9 @@ export default function Characters() {
                 }
                 if (error) {
                     console.error("Error fetching characters:", error);
-                    // Show network error to user
-                    if (error.message?.includes('fetch failed') || error.message?.includes('timeout')) {
-                        console.error("Network connection issue - using fallback data");
-                        setCharacters(fallbackCharacters);
-                        setUsingFallback(true);
-                        setError("Network connection issue - showing sample data");
-                    }
+                    setCharacters(fallbackCharacters);
+                    setUsingFallback(true);
+                    setError("Database error - showing sample data");
                 }
             } catch (err) {
                 console.error("Unexpected error:", err);
