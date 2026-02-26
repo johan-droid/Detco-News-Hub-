@@ -324,7 +324,7 @@ export default function Characters() {
                 </motion.div>
             )}
         </div>
-            <DataStatus usingFallback={usingFallback} error={error} />
-        </section>
-    );
+        <DataStatus usingFallback={usingFallback} error={error} />
+    </section>
+);
 }
