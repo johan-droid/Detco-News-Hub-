@@ -7,6 +7,23 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://vercel.live",
+              "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data: https://cdn.jsdelivr.net",
+              "connect-src 'self' https://uremfwmoqaygttpgldvm.supabase.co https://vercel.live wss://uremfwmoqaygttpgldvm.supabase.co",
+              "frame-src 'none'",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "manifest-src 'self'",
+              "worker-src 'self' blob:",
+            ].join("; "),
+          },
+          {
             key: "X-Frame-Options",
             value: "DENY",
           },

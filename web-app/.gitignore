@@ -178,6 +178,7 @@ temp/
 # ============================================
 # Test database connection script
 test-db-connection.js
+test-supabase-update.js
 
 # Local development scripts
 scripts/local-*.js
@@ -186,6 +187,85 @@ scripts/local-*.js
 *.backup
 *.bak
 *.old
+
+# ============================================
+# DETECTIVE CONAN WEBSITE SPECIFIC
+# ============================================
+# Development and testing files
+MOBILE_OPTIMIZATION_SUMMARY.md
+
+# Temporary development logs
+dev-logs/
+*.dev.log
+
+# Local database exports
+database-exports/
+*.sql.backup
+
+# Supabase development files (keep SQL schemas)
+supabase/migrations/local-*
+supabase/seed-data/local-*
+
+# Performance testing files
+performance-tests/
+*.perf.json
+
+# Local configuration overrides
+config.local.json
+settings.local.js
+
+# Development documentation (keep README)
+docs/development/
+docs/testing/
+docs/local-*
+
+# Temporary build artifacts
+temp-build/
+*.temp.build
+
+# Local analytics data
+local-analytics/
+analytics-local.json
+
+# Development server data
+dev-server-data/
+*.dev-data.json
+
+# Cache and temporary directories
+.cache-dev/
+.temp-dev/
+.dev-cache/
+
+# Local testing reports
+test-reports/local/
+*.local-test.xml
+
+# Development assets
+assets/dev-*
+dev-assets/
+
+# Local environment specific files
+.local/
+*-local.*
+
+# Backup and version control files
+*.orig
+*.rej
+*.patch
+*.diff
+
+# IDE specific backup files
+.vscode/settings.json
+.idea/workspace.xml
+*.sublime-workspace
+
+# OS specific temp files
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 
 # ============================================
 # GENERATED FILES
@@ -719,3 +799,196 @@ legacy/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# ============================================
+# DETECTIVE CONAN WEBSITE - ADDITIONAL SECURITY
+# ============================================
+# Local API keys and secrets (keep examples)
+api-keys.local.json
+secrets.local.json
+credentials.local.*
+
+# Local database connection strings
+db-connection.local.json
+database.local.*
+
+# Third-party service configs (keep examples)
+google-services.local.json
+firebase.local.json
+analytics.local.json
+
+# Local authentication data
+auth.local.*
+tokens.local.*
+
+# Development server configurations
+server.local.conf
+nginx.local.conf
+apache.local.conf
+
+# Local SSL certificates (keep examples)
+ssl/local-*
+localhost.local.pem
+localhost.local.key
+
+# Backup and archive files
+*.zip.backup
+*.tar.backup
+*.gz.backup
+
+# ============================================
+# NEXT.JS SPECIFIC ENHANCEMENTS
+# ============================================
+# Next.js build artifacts
+.next/cache/
+.next/server/
+.next/static/chunks/webpack/
+
+# Next.js development server
+.next/turbo/
+
+# Next.js trace files
+*.trace
+
+# Next.js static exports (if used)
+out/
+
+# ============================================
+# TAILWIND CSS ENHANCEMENTS
+# ============================================
+# Tailwind build cache
+.postcssrc.local.json
+tailwind.local.config.js
+
+# Tailwind JIT cache
+.jit/
+
+# ============================================
+# SUPABASE DEVELOPMENT
+# ============================================
+# Supabase local development
+supabase/.branches/
+supabase/.temp/
+
+# Supabase CLI cache
+.supabase/
+
+# Local Supabase dumps
+supabase/dumps/local-*
+
+# ============================================
+# VERCEL DEVELOPMENT
+# ============================================
+# Vercel local development
+.vercel/local/
+.vercel/.cache/
+
+# Vercel build outputs
+.vercel/output/
+
+# ============================================
+# TESTING ENHANCEMENTS
+# ============================================
+# Jest coverage and reports
+coverage/junit.xml
+coverage/lcov-report/
+
+# Playwright test results
+playwright-report/
+test-results/
+
+# Cypress test data
+cypress/fixtures/local-*
+cypress/videos/local-*
+
+# ============================================
+# PERFORMANCE MONITORING
+# ============================================
+# Local performance metrics
+perf-metrics/
+*.perf.json
+
+# Bundle analysis local reports
+bundle-analysis/local/
+
+# Memory profiling
+heap-snapshots/
+*.heapsnapshot
+
+# ============================================
+# DEVELOPMENT TOOLS
+# ============================================
+# Local tool configurations
+.eslintcache.local
+.prettiercache.local
+
+# Development proxy configs
+proxy.local.conf
+
+# Local environment variables for tools
+.env.local.tools
+.env.local.dev
+
+# ============================================
+# AI DEVELOPMENT TOOLS
+# ============================================
+# Claude Desktop local files
+.claude/local-*
+
+# Cursor AI local settings
+.cursor/local-*
+
+# GitHub Copilot local cache
+.github/copilot/local/
+
+# ============================================
+# BACKUP AND VERSION CONTROL
+# ============================================
+# Git merge conflict files
+*.orig
+*.rej
+
+# Patch files
+*.patch
+*.diff
+
+# Stash files
+.git/stash/
+
+# ============================================
+# SECURITY AND COMPLIANCE
+# ============================================
+# Local security scans
+security-scan-results/local/
+
+# Compliance reports local
+compliance-reports/local/
+
+# Audit logs local
+audit.local.log
+
+# ============================================
+# DEPLOYMENT CONFIGURATIONS
+# ============================================
+# Local deployment configs
+deploy.local.*
+deployment.local.*
+
+# Infrastructure as code local
+terraform.local.*
+ansible/local.*
+
+# ============================================
+# MONITORING AND LOGGING
+# ============================================
+# Local monitoring data
+monitoring/local/
+metrics.local.*
+
+# Local log files
+logs/local/
+*.local.log
+
+# Debug files local
+debug.local.*
+trace.local.*

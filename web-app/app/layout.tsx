@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Crimson_Pro, Space_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import NetworkStatus from "@/components/NetworkStatus";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${crimson.variable} ${spaceMono.variable}`}>
       <body className="antialiased bg-ink text-white font-body selection:bg-gold selection:text-ink">
+        <NetworkStatus />
         {children}
         <SpeedInsights />
       </body>
