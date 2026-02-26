@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { fallbackCharacters } from "@/lib/fallbackData";
+import DataStatus from "@/components/DataStatus";
 import type { CharacterItem } from "@/types";
 
 export default function Characters() {
@@ -318,12 +319,12 @@ export default function Characters() {
                                         </div>
                                     </div>
                                 )}
-                            </div>
                         </div>
-
-                    </motion.div>
-                </div>
+                    </div>
+                </motion.div>
             )}
+        </div>
+            <DataStatus usingFallback={usingFallback} error={error} />
         </section>
     );
 }

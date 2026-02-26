@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import { ArrowRight, FileText, AlertTriangle } from "lucide-react";
 import { supabase } from "@/lib/supabaseClient";
 import { fallbackNews } from "@/lib/fallbackData";
+import DataStatus from "@/components/DataStatus";
 import Link from "next/link";
 import type { NewsItem } from "@/types";
 
@@ -240,6 +241,7 @@ export default function News() {
                     </div>
                 )}
             </div>
+            <DataStatus usingFallback={usingFallback} error={error} />
         </section>
     );
 }
