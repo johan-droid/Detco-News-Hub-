@@ -1,0 +1,43 @@
+Testing Supabase connection...
+
+≡ƒô░ Testing news table...
+
+≡ƒæÑ Testing characters table...
+Γ¥î News error: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '\n' +
+    'Caused by: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms) (UND_ERR_CONNECT_TIMEOUT)\n' +
+    'ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms)\n' +
+    '    at onConnectTimeout (node:internal/deps/undici/undici:2718:28)\n' +
+    '    at Immediate._onImmediate (node:internal/deps/undici/undici:2684:35)\n' +
+    '    at process.processImmediate (node:internal/timers:483:21)',
+  hint: '',
+  code: ''
+}
+Γ¥î Characters error: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '\n' +
+    'Caused by: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms) (UND_ERR_CONNECT_TIMEOUT)\n' +
+    'ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms)\n' +
+    '    at onConnectTimeout (node:internal/deps/undici/undici:2718:28)\n' +
+    '    at Immediate._onImmediate (node:internal/deps/undici/undici:2684:35)\n' +
+    '    at process.processImmediate (node:internal/timers:483:21)',
+  hint: '',
+  code: ''
+}
+
+≡ƒùé∩╕Å Checking available tables...
+Γ¥î Tables error: {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '\n' +
+    'Caused by: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms) (UND_ERR_CONNECT_TIMEOUT)\n' +
+    'ConnectTimeoutError: Connect Timeout Error (attempted addresses: 2405:200:1607:2820:41::36:443, 49.44.79.236:443, timeout: 10000ms)\n' +
+    '    at onConnectTimeout (node:internal/deps/undici/undici:2718:28)\n' +
+    '    at Immediate._onImmediate (node:internal/deps/undici/undici:2684:35)\n' +
+    '    at process.processImmediate (node:internal/timers:483:21)',
+  hint: '',
+  code: ''
+}
