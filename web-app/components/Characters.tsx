@@ -4,15 +4,12 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 // Removed supabase import
-import { fallbackCharacters } from "@/lib/fallbackData";
-import DataStatus from "@/components/DataStatus";
 import type { CharacterItem } from "@/types";
 
 export default function Characters() {
     const [characters, setCharacters] = useState<CharacterItem[]>([]);
     const [selectedChar, setSelectedChar] = useState<CharacterItem | null>(null);
     const [loading, setLoading] = useState(true);
-    const [usingFallback, setUsingFallback] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -28,27 +25,22 @@ export default function Characters() {
 
                 if (data && data.length > 0) {
                     setCharacters(data);
-                    setUsingFallback(false);
                     setError(null);
                 } else {
-                    // Use fallback data if no data from Supabase
-                    setCharacters(fallbackCharacters);
-                    setUsingFallback(true);
+                    // No data from Supabase
+                    setCharacters([]);
                     setError(null);
-                    console.log("Using fallback characters data");
                 }
                 if (error) {
                     console.error("Error fetching characters:", error);
-                    setCharacters(fallbackCharacters);
-                    setUsingFallback(true);
-                    setError("Database error - showing sample data");
+                    setCharacters([]);
+                    setError("Database error - unable to load characters");
                 }
             } catch (err) {
                 console.error("Unexpected error:", err);
-                // Use fallback data on any error
-                setCharacters(fallbackCharacters);
-                setUsingFallback(true);
-                setError("Connection failed - showing sample data");
+                // Set empty array on any error
+                setCharacters([]);
+                setError("Connection failed - unable to load characters");
             } finally {
                 setLoading(false);
             }
@@ -323,7 +315,6 @@ export default function Characters() {
                     </motion.div>
                 </div>
             )}
-            <DataStatus usingFallback={usingFallback} error={error} />
         </section>
     );
 }

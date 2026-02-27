@@ -4,8 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, FileText, AlertTriangle } from "lucide-react";
 // Removed supabase import
-import { fallbackNews } from "@/lib/fallbackData";
-import DataStatus from "@/components/DataStatus";
 import Link from "next/link";
 import type { NewsItem } from "@/types";
 
@@ -45,7 +43,6 @@ const categoryColors: Record<string, { main: string; light: string; gradient: st
 export default function News() {
     const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [usingFallback, setUsingFallback] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -61,27 +58,22 @@ export default function News() {
 
                 if (data && data.length > 0) {
                     setNewsItems(data);
-                    setUsingFallback(false);
                     setError(null);
                 } else {
-                    // Use fallback data if no data from Supabase
-                    setNewsItems(fallbackNews);
-                    setUsingFallback(true);
+                    // Empty or no data from Supabase
+                    setNewsItems([]);
                     setError(null);
-                    console.log("Using fallback news data");
                 }
                 if (error) {
                     console.error("Error fetching news:", error);
-                    setNewsItems(fallbackNews);
-                    setUsingFallback(true);
-                    setError("Database error - showing sample data");
+                    setNewsItems([]);
+                    setError("Database error - unable to load news");
                 }
             } catch (err) {
                 console.error("Unexpected error:", err);
-                // Use fallback data on any error
-                setNewsItems(fallbackNews);
-                setUsingFallback(true);
-                setError("Connection failed - showing sample data");
+                // Set empty array on any error
+                setNewsItems([]);
+                setError("Connection failed - unable to load news");
             } finally {
                 setLoading(false);
             }
@@ -239,7 +231,6 @@ export default function News() {
                     </div>
                 )}
             </div>
-            <DataStatus usingFallback={usingFallback} error={error} />
         </section>
     );
 }
