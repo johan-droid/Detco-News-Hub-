@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { Clock, User, Tag } from "lucide-react";
+import { Clock, User } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import type { NewsItem } from "@/types";
 import { motion } from "framer-motion";
@@ -42,9 +42,9 @@ export default function NewsDetail() {
     }, [id]);
 
     const formattedDate = useMemo(() => {
-        if (!newsItem) return '';
+        if (!newsItem) return "";
         return new Date(newsItem.created_at).toLocaleDateString("en-US", {
-            year: 'numeric', month: 'long', day: 'numeric'
+            year: "numeric", month: "long", day: "numeric"
         });
     }, [newsItem]);
 
@@ -76,90 +76,50 @@ export default function NewsDetail() {
     }
 
     return (
-        <main className="min-h-screen bg-ink text-white font-body selection:bg-gold/30 selection:text-white">
-            <article className="max-w-4xl mx-auto px-4 py-12 md:py-20">
-                {/* Header Navigation */}
+        <main className="min-h-screen bg-ink font-body text-white selection:bg-gold/30 selection:text-white">
+            <article className="mx-auto max-w-4xl px-4 pb-16 pt-28 md:pt-32">
                 <BackButton className="mb-6" text="Back to News" />
 
-                {/* Meta Info */}
-                <motion.div
+                <motion.header
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-wrap items-center gap-4 mb-6 font-mono text-xs text-muted uppercase tracking-wider"
+                    className="rounded-3xl border border-white/10 bg-card/70 p-6 backdrop-blur-sm md:p-8"
                 >
-                    <span
-                        className="px-2 py-1 border"
-                        style={{ color: color, borderColor: `${color}44`, backgroundColor: `${color}11` }}
-                    >
-                        {newsItem.category}
-                    </span>
-                    <span className="flex items-center gap-1">
-                        <Clock size={12} />
-                        {formattedDate}
-                    </span>
-                    {newsItem.author && (
-                        <span className="flex items-center gap-1 text-white/60">
-                            <User size={12} />
-                            {newsItem.author}
+                    <div className="mb-5 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-muted">
+                        <span className="rounded-full border px-3 py-1" style={{ color, borderColor: `${color}44`, backgroundColor: `${color}18` }}>
+                            {newsItem.category}
                         </span>
-                    )}
+                        <span className="inline-flex items-center gap-1"><Clock size={12} />{formattedDate}</span>
+                        {newsItem.author && <span className="inline-flex items-center gap-1 text-white/70"><User size={12} />{newsItem.author}</span>}
+                    </div>
+
+                    <h1 className="font-display text-3xl font-bold leading-tight md:text-5xl">{newsItem.title}</h1>
+
                     {newsItem.updated_at && newsItem.updated_at !== newsItem.created_at && (
-                        <span className="flex items-center gap-1 text-accent/80">
-                            <Clock size={12} />
-                            Last Updated: {new Date(newsItem.updated_at).toLocaleString('en-US', {
-                                timeZone: 'UTC',
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                timeZoneName: 'short'
-                            })}
-                        </span>
+                        <p className="mt-3 font-mono text-[11px] uppercase tracking-widest text-accent">
+                            Updated {new Date(newsItem.updated_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </p>
                     )}
-                </motion.div>
+                </motion.header>
 
-                {/* Title */}
-                <motion.h1
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="font-display font-bold text-3xl md:text-5xl lg:text-6xl leading-tight mb-8 text-white"
-                >
-                    {newsItem.title}
-                </motion.h1>
-
-                {/* Image */}
                 {newsItem.image && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="mb-12 border border-white/10 rounded overflow-hidden"
-                    >
-                        <img
-                            src={newsItem.image}
-                            alt={newsItem.title}
-                            className="w-full h-auto object-cover max-h-[600px]"
-                        />
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+                        <img src={newsItem.image} alt={newsItem.title} className="max-h-[560px] w-full object-cover" />
                     </motion.div>
                 )}
 
-                {/* Content */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="prose prose-invert prose-lg max-w-none prose-headings:font-display prose-headings:text-gold prose-a:text-accent prose-blockquote:border-gold/30 prose-blockquote:bg-white/5 prose-blockquote:px-4 prose-blockquote:py-1 prose-blockquote:not-italic"
+                    transition={{ delay: 0.2 }}
+                    className="mt-8 rounded-3xl border border-white/10 bg-deep/80 p-6 prose prose-invert prose-lg max-w-none prose-headings:font-display prose-headings:text-gold prose-a:text-accent md:p-10"
                 >
-                    {/* Simple rendering for now, could use markdown parser if content is markdown */}
-                    {newsItem.content.split('\n').map((paragraph, idx) => (
-                        <p key={idx} className="mb-4 text-white/80 leading-relaxed font-light">
+                    {newsItem.content.split("\n").map((paragraph, idx) => (
+                        <p key={idx} className="mb-4 text-white/85 leading-relaxed font-light">
                             {paragraph}
                         </p>
                     ))}
                 </motion.div>
-
             </article>
         </main>
     );
