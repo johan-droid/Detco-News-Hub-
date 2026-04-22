@@ -78,7 +78,7 @@ export default function Navbar() {
                                 </Link>
                             );
                         })}
-                        <Link href="/admin" className="rounded-full border border-gold/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest text-gold hover:bg-gold hover:text-ink">
+                        <Link href="/login" className="rounded-full border border-gold/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest text-gold hover:bg-gold hover:text-ink">
                             Admin
                         </Link>
                     </div>
@@ -112,13 +112,6 @@ export default function Navbar() {
                             </Link>
                         );
                     })}
-                    <Link
-                        href="/admin"
-                        onClick={() => setMenuOpen(false)}
-                        className="mt-1 block rounded-xl border border-gold/40 px-4 py-3 text-center font-mono text-xs uppercase tracking-widest text-gold hover:bg-gold hover:text-ink"
-                    >
-                        Admin
-                    </Link>
                 </div>
             )}
         </>
