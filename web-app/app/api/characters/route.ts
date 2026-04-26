@@ -1,19 +1,22 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { db } from "@/lib/db";
+import { characters } from "@/lib/schema";
+import { asc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
     try {
-        const { data, error } = await supabase
-            .from("characters")
-            .select("*")
-            .order("created_at", { ascending: true });
-
-        if (error) {
-            console.error("API error fetching characters:", error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+        const rawData = await db
+            .select()
+            .from(characters)
+            .orderBy(asc(characters.createdAt));
+            
+        const data = rawData.map(item => ({
+            ...item,
+            created_at: item.createdAt,
+            real_name: item.realName
+        }));
 
         return NextResponse.json({ data });
     } catch (err: any) {

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { getSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Lock, LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X, Upload } from "lucide-react";
+import { LogOut, Plus, Image as ImageIcon, Trash2, Edit, Save, X, Upload, Lock } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { sanitizeInput, sanitizeHTML, validateTitle, validateContent, validateCategory } from "@/lib/security";
 
@@ -32,98 +32,26 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState<Post[]>([]);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [uploading, setUploading] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState(INITIAL_FORM_STATE);
-    const [loginSecret, setLoginSecret] = useState("");
-    const [loginError, setLoginError] = useState("");
 
     const router = useRouter();
 
     const fetchPosts = useCallback(async () => {
-        const { data, error } = await supabase
-            .from("news")
-            .select("*")
-            .order("created_at", { ascending: false });
-
-        if (error) console.error("Error fetching posts:", error);
-        else setPosts(data || []);
+        try {
+            const res = await fetch("/api/admin/news");
+            const json = await res.json();
+            if (res.ok && json.data) {
+                setPosts(json.data);
+            }
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        }
     }, []);
 
-    const handleLogin = useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoginError("");
-
-        const email = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        if (!email) {
-            setLoginError("Server configuration error: Admin email not set");
-            return;
-        }
-
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password: loginSecret,
-        });
-
-        if (error) {
-            setLoginError("Invalid credentials");
-        }
-        // Clear the password input for security
-        setLoginSecret("");
-    }, [loginSecret]);
-
     const handleLogout = useCallback(async () => {
-        await supabase.auth.signOut();
-        router.push("/");
-        router.refresh();
-    }, [router]);
-
-    const handleImageUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            alert('Please select an image file');
-            return;
-        }
-
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('Image size must be less than 5MB');
-            return;
-        }
-
-        setUploading(true);
-        try {
-            // Create unique filename
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            // Upload to Supabase Storage
-            const { data, error } = await supabase.storage
-                .from('news-images')
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (error) throw error;
-
-            // Get public URL
-            const { data: { publicUrl } } = supabase.storage
-                .from('news-images')
-                .getPublicUrl(filePath);
-
-            setFormData(prev => ({ ...prev, image: publicUrl }));
-        } catch (error: any) {
-            console.error('Error uploading image:', error);
-            alert('Error uploading image: ' + error.message);
-        } finally {
-            setUploading(false);
-        }
+        await signOut({ callbackUrl: "/" });
     }, []);
 
     const resetForm = useCallback(() => {
@@ -134,23 +62,15 @@ export default function AdminDashboard() {
     const handleSave = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log('Form data being saved:', formData);
-
         // Validate inputs
         const titleValidation = validateTitle(formData.title);
-        if (!titleValidation.valid) {
-            return alert(titleValidation.error);
-        }
+        if (!titleValidation.valid) return alert(titleValidation.error);
 
         const contentValidation = validateContent(formData.content);
-        if (!contentValidation.valid) {
-            return alert(contentValidation.error);
-        }
+        if (!contentValidation.valid) return alert(contentValidation.error);
 
         const categoryValidation = validateCategory(formData.category);
-        if (!categoryValidation.valid) {
-            return alert(categoryValidation.error);
-        }
+        if (!categoryValidation.valid) return alert(categoryValidation.error);
 
         // Sanitize inputs
         const validCategories = ['BREAKING', 'MANGA', 'ANIME', 'THEORY', 'EVENTS', 'GENERAL'];
@@ -164,45 +84,30 @@ export default function AdminDashboard() {
             title: sanitizeInput(formData.title),
             content: sanitizeHTML(formData.content),
             category: sanitizedCategory,
-            image: sanitizeInput(formData.image),
+            image: sanitizeInput(formData.image), // User provides a URL directly
             author: sanitizeInput(formData.author),
         };
 
-        console.log('Sanitized payload:', payload);
+        try {
+            const method = editingId ? "PUT" : "POST";
+            const url = editingId ? `/api/admin/news/${editingId}` : "/api/admin/news";
 
-        let error;
-        if (editingId) {
-            // Update existing post with updated_at timestamp
-            console.log('Updating post:', editingId, 'with payload:', payload);
+            const res = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
 
-            const { data, error: err } = await supabase
-                .from("news")
-                .update({
-                    title: payload.title,
-                    content: payload.content,
-                    category: sanitizedCategory,
-                    image: payload.image,
-                    author: payload.author
-                })
-                .eq("id", editingId)
-                .select();
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || "Failed to save");
+            }
 
-            error = err;
-            console.log('Update response:', { data, error });
-        } else {
-            const { error: err } = await supabase
-                .from("news")
-                .insert([payload]);
-            error = err;
-        }
-
-        if (error) {
-            console.error('Detailed error:', error);
-            alert("Error saving: " + error.message + (error.details ? " - " + error.details : ""));
-        } else {
-            console.log('Save successful');
             resetForm();
             fetchPosts();
+        } catch (error: any) {
+            console.error('Detailed error:', error);
+            alert("Error saving: " + error.message);
         }
     }, [formData, editingId, resetForm, fetchPosts]);
 
@@ -221,109 +126,32 @@ export default function AdminDashboard() {
     const handleDelete = useCallback(async (id: string) => {
         if (!confirm("Are you sure you want to archive this case file?")) return;
 
-        const { error } = await supabase.from("news").delete().eq("id", id);
-        if (error) alert("Error deleting: " + error.message);
-        else fetchPosts();
+        try {
+            const res = await fetch(`/api/admin/news/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Failed to delete");
+            fetchPosts();
+        } catch (error: any) {
+            alert("Error deleting: " + error.message);
+        }
     }, [fetchPosts]);
 
-    const postsList = useMemo(() => posts, [posts]);
-
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
+        const init = async () => {
+            const sess = await getSession();
+            setSession(sess);
+            if (sess) {
+                fetchPosts();
+            } else {
+                router.push("/login?redirect=/admin");
+            }
             setLoading(false);
-            if (session) fetchPosts();
-        });
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            if (session) fetchPosts();
-        });
-
-        // Auto-logout on page visibility change (tab switch, minimize, etc.)
-        const handleVisibilityChange = () => {
-            if (document.hidden && session) {
-                supabase.auth.signOut();
-            }
         };
-
-        // Auto-logout when page is about to unload (close tab, navigate away)
-        const handleBeforeUnload = () => {
-            if (session) {
-                supabase.auth.signOut();
-            }
-        };
-
-        // Auto-logout after 15 minutes of inactivity
-        let inactivityTimer: NodeJS.Timeout;
-        const resetInactivityTimer = () => {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                if (session) {
-                    supabase.auth.signOut();
-                    alert("Session expired due to inactivity. Please log in again.");
-                }
-            }, 15 * 60 * 1000); // 15 minutes
-        };
-
-        // Track user activity
-        const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-        activityEvents.forEach(event => {
-            document.addEventListener(event, resetInactivityTimer);
-        });
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
-        // Start inactivity timer
-        if (session) resetInactivityTimer();
-
-        return () => {
-            subscription.unsubscribe();
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-            activityEvents.forEach(event => {
-                document.removeEventListener(event, resetInactivityTimer);
-            });
-            clearTimeout(inactivityTimer);
-        };
-    }, []);
+        init();
+    }, [router, fetchPosts]);
 
     if (loading) return <div className="min-h-screen flex items-center justify-center bg-ink text-gold font-mono">Loading Console...</div>;
 
-    if (!session) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-ink p-4">
-                <div className="w-full max-w-md bg-card border border-gold/30 p-6 sm:p-8 shadow-2xl">
-                    <div className="flex justify-center mb-6 text-gold">
-                        <Lock size={48} />
-                    </div>
-                    <h2 className="text-center font-display font-bold text-xl sm:text-2xl text-white mb-8 tracking-wide">RESTRICTED ACCESS</h2>
-                    <form onSubmit={handleLogin} className="space-y-6">
-                        <div>
-                            <label className="block font-mono text-xs text-gold uppercase tracking-widest mb-2">Security Key</label>
-                            <input
-                                type="password"
-                                value={loginSecret}
-                                onChange={(e) => setLoginSecret(e.target.value)}
-                                className="w-full bg-black/30 border border-white/10 text-white p-3 focus:border-gold outline-none transition-colors font-mono text-sm"
-                                placeholder="Enter Access Key"
-                            />
-                        </div>
-                        {loginError && <p className="text-red text-xs font-mono">{loginError}</p>}
-                        <button
-                            type="submit"
-                            className="w-full bg-gold text-ink font-mono font-bold py-3 sm:py-4 uppercase tracking-widest hover:bg-gold-light transition-colors text-sm"
-                        >
-                            Authenticate
-                        </button>
-                    </form>
-                </div>
-            </div>
-        );
-    }
+    if (!session) return null; // Middleware or useEffect will redirect
 
     return (
         <div className="min-h-screen bg-ink text-white p-4 sm:p-6 md:p-12 font-body">
@@ -396,28 +224,17 @@ export default function AdminDashboard() {
                                 />
                             </div>
                             <div>
-                                <label className="block font-mono text-xs text-muted uppercase mb-2">Evidence (Image)</label>
-                                <label className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-3 w-full justify-center font-mono text-xs uppercase hover:bg-accent hover:text-white transition-colors cursor-pointer min-h-[44px]">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageUpload}
-                                        className="hidden"
-                                        disabled={uploading}
-                                    />
-                                    {uploading ? (
-                                        <>
-                                            <Upload size={16} className="animate-pulse" /> Uploading...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <ImageIcon size={16} /> Upload Evidence
-                                        </>
-                                    )}
-                                </label>
+                                <label className="block font-mono text-xs text-muted uppercase mb-2">Evidence (Image URL)</label>
+                                <input
+                                    type="text"
+                                    value={formData.image}
+                                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                    className="w-full bg-black/30 border border-white/10 p-3 text-white focus:border-gold outline-none text-sm sm:text-base min-h-[44px]"
+                                    placeholder="https://example.com/image.jpg"
+                                />
                                 {formData.image && (
                                     <div className="mt-2 text-xs text-gold truncate" title={formData.image}>
-                                        ✓ Image uploaded
+                                        ✓ Image URL provided
                                     </div>
                                 )}
                             </div>

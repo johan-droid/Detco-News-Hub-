@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { signIn } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff } from "lucide-react";
 
@@ -13,7 +13,6 @@ export default function LoginForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Fallback to router.push or fallback href if hook behavior differs
     const router = useRouter();
 
     let redirectUrl = '/';
@@ -30,14 +29,15 @@ export default function LoginForm() {
         setError(null);
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const res = await signIn("credentials", {
                 email,
                 password,
+                redirect: false,
             });
 
-            if (error) {
-                setError(error.message);
-            } else if (data.session) {
+            if (res?.error) {
+                setError(res.error);
+            } else if (res?.ok) {
                 router.push(redirectUrl);
             }
         } catch (err: any) {

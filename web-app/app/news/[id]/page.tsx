@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+// Import removed
 import { Clock, User } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import type { NewsItem } from "@/types";
@@ -27,14 +27,17 @@ export default function NewsDetail() {
         const fetchNewsItem = async () => {
             if (!id) return;
 
-            const { data, error } = await supabase
-                .from("news")
-                .select("*")
-                .eq("id", id)
-                .single();
-
-            if (data) setNewsItem(data);
-            if (error) console.error("Error fetching news:", error);
+            try {
+                const res = await fetch(`/api/news/${id}`);
+                const json = await res.json();
+                if (res.ok && json.data) {
+                    setNewsItem(json.data);
+                } else {
+                    console.error("Error fetching news:", json.error);
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+            }
             setLoading(false);
         };
 

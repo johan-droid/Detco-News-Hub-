@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { db } from "@/lib/db";
+import { news } from "@/lib/schema";
+import { desc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
     try {
-        const { data, error } = await supabase
-            .from("news")
-            .select("*")
-            .order("created_at", { ascending: false })
+        const rawData = await db
+            .select()
+            .from(news)
+            .orderBy(desc(news.createdAt))
             .limit(4);
-
-        if (error) {
-            console.error("API error fetching news:", error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+            
+        const data = rawData.map(item => ({
+            ...item,
+            created_at: item.createdAt,
+            updated_at: item.updatedAt
+        }));
 
         return NextResponse.json({ data });
     } catch (err: any) {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -12,11 +13,21 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Protect admin route
+    if (pathname.startsWith('/admin')) {
+        const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+        if (!token) {
+            const url = new URL('/login', request.url);
+            url.searchParams.set('redirect', pathname);
+            return NextResponse.redirect(url);
+        }
+    }
+
     // Add security headers to response
     const response = NextResponse.next();
 
-    // Content Security Policy - simplified to avoid regex issues
-    const cspHeader = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com https://vercel.live; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://vercel.live; frame-src 'self' https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self';";
+    // Content Security Policy
+    const cspHeader = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com https://vercel.live; connect-src 'self' https://vercel.live; frame-src 'self' https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self';";
 
     response.headers.set('Content-Security-Policy', cspHeader);
     response.headers.set('X-DNS-Prefetch-Control', 'on');
@@ -25,16 +36,8 @@ export async function middleware(request: NextRequest) {
     return response;
 }
 
-// Configure which routes the middleware runs on
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public folder
-         */
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };
